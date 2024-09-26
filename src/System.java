@@ -7,8 +7,13 @@ public class System {
     int selectedDiskIndex;
     String workingDirectoryAbsolutePath; // expected value example: /dir1/dir2
     Directory workingDirectory;
+    boolean isRunning;
+
+    static final int DEFAULTDIRECTORYSIZE = 40;
+    static final int DEFAULTDOCUMENTSIZE = 40;
 
     private System() {
+        isRunning = true;
         selectedDiskIndex = 0;
         disks = new ArrayList<>();
         workingDirectoryAbsolutePath = "/";
@@ -53,12 +58,20 @@ public class System {
     }
 
     public static Disk getWorkingDisk() {
-        return systemInstance.disks.get(systemInstance.selectedDiskIndex);
+        if (!systemInstance.disks.isEmpty()) {
+            return systemInstance.disks.get(systemInstance.selectedDiskIndex);
+        } else {
+            return null;
+        }
     }
 
     // WIP
     public static Directory getWorkingDirectory() {
         final Disk workingDisk = getWorkingDisk();
+        if (workingDisk == null) {
+            throw new IllegalArgumentException("Unexpected behavior");
+        }
+
         if (systemInstance.workingDirectoryAbsolutePath.equals("/")) {
             return workingDisk.rootDirectory;
         }
@@ -71,16 +84,20 @@ public class System {
 
     public static void newDirectory(String dirName) {
         getWorkingDirectory().directories.add(new Directory(dirName));
+        handleDiskSizeChange(DEFAULTDIRECTORYSIZE);
     }
 
-    public static void newDocument(String docName, String doctype, String docContent) {
-        getWorkingDirectory().files.add(new Document(docName, doctype, docContent));
+    public static void newDocument(String docName, String docType, String docContent) {
+        getWorkingDirectory().files.add(new Document(docName, docType, docContent));
+        handleDiskSizeChange(DEFAULTDOCUMENTSIZE);
     }
 
     public static void deleteFile(String fileName) {
         List<Document> files = getWorkingDirectory().files;
         for (int i = 0; i < files.size(); i++) {
             if (files.get(i).name.equals(fileName)) {
+                int sizeChange = files.get(i).size();
+                handleDiskSizeChange(sizeChange);
                 files.remove(i);
                 return;
             }
@@ -121,6 +138,22 @@ public class System {
         }
         int delimiterIndex = systemInstance.workingDirectoryAbsolutePath.lastIndexOf('/');
         systemInstance.workingDirectoryAbsolutePath = systemInstance.workingDirectoryAbsolutePath.substring(0, delimiterIndex);
+    }
+
+    private static void handleDiskSizeChange(int sizeChange) {
+        final Disk workingDisk = getWorkingDisk();
+        if (workingDisk == null) {
+            throw new IllegalArgumentException("Unexpected behavior");
+        }
+        if (workingDisk.currentSize + sizeChange >= workingDisk.maxSize) {
+            java.lang.System.out.println("Disk size exceeded!");
+        } else {
+            workingDisk.currentSize += sizeChange;
+        }
+    }
+
+    public static void terminate() {
+        systemInstance.isRunning = false;
     }
 
 //    public static List<> listFiles() {
