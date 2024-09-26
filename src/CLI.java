@@ -2,14 +2,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CLI {
+    private static Scanner scannerObj = new Scanner(java.lang.System.in);
     public static void renderCLI() {
         final Disk workingDisk = System.getWorkingDisk();
         if (System.getInstance().disks.isEmpty()) {
             promptCreateDisk();
         } else if (workingDisk == null) {
             promptLoadDisk();
-        } else {
-            java.lang.System.out.print(System.getInstance().workingDirectoryAbsolutePath);
         }
         handleInput();
     }
@@ -24,8 +23,7 @@ public class CLI {
 
     private static void handleInput() {
         java.lang.System.out.print(System.getInstance().workingDirectoryAbsolutePath + "> ");
-        Scanner scannerObj = new Scanner(System.in);
-        String input = scannerObj.nextLine();
+        String input = CLI.scannerObj.nextLine();
         parseInput(input);
     }
 
@@ -37,11 +35,29 @@ public class CLI {
                 case "newDisk": {
                     int newDiskSize = Integer.parseInt(inputList[1]);
                     System.newDisk(newDiskSize);
+                    return;
                 }
                 case "newDoc": {
                     String docName = inputList[1];
                     String docType = inputList[2];
-                    String doc
+                    String docContent = "";
+                    if (inputList.length >= 4) {
+                        docContent = inputList[3];
+                    }
+                    System.newDocument(docName, docType, docContent);
+                    return;
+                }
+                case "newDir": {
+                    String dirName = inputList[1];
+                    System.newDirectory(dirName);
+                    return;
+                }
+                case "quit": {
+                    System.terminate();
+                    return;
+                }
+                default: {
+                    java.lang.System.out.println("Invalid command! (Commands are case-sensitive)");
                 }
             }
         } catch (IndexOutOfBoundsException e) {
