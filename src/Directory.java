@@ -8,14 +8,18 @@ public class Directory {
     List<Directory> directories; // sub directories
     // add a stack for undo/redo action
 
-    public Directory(String name) {
-        if (name != null && name.matches("[A-Za-z0-9]+") && name.length() <= 10) { // fyi: https://www.w3schools.com/python/python_regex.asp
+    public Directory(String name, boolean isRootDirectory) {
+        if ((isRootDirectory) || (name != null && name.matches("[A-Za-z0-9]+") && name.length() <= 10)) { // fyi: https://www.w3schools.com/python/python_regex.asp
             this.name = name;
         } else {
             System.out.println("Invalid directory name!");
         }
         files = new ArrayList<>();
         directories = new ArrayList<>();
+    }
+
+    public Directory(String name) {
+        this(name, false);
     }
 
     public int size() {
