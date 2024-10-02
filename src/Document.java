@@ -1,6 +1,4 @@
-import java.lang.System;
-
-public class Document {
+class Document {
     String name;
     String type;
     String content;
@@ -9,7 +7,7 @@ public class Document {
         if (name != null && name.matches("[A-Za-z0-9]+") && name.length() <= 10) { // fyi: https://www.w3schools.com/python/python_regex.asp
             this.name = name;
         } else {
-            System.out.println("Invalid document name!");
+            throw new IllegalArgumentException("Invalid document name!");
         }
         this.type = type;
         this.content = "";
@@ -21,7 +19,7 @@ public class Document {
     }
 
     public int size() {
-        return 40 + content.length() * 2;
+        return System.defaultDocumentSize + content.length() * 2;
     }
 
 }
