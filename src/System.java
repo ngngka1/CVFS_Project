@@ -1,68 +1,67 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
-public class System {
-    private static System systemInstance; // private so singleton instance doesnt get directly accessed
-    List<Disk> disks;
-    int selectedDiskIndex;
-    String workingDirectoryAbsolutePath; // expected value example: /dir1/dir2
-    Directory workingDirectory;
-    boolean isRunning;
+class System {
+    private static System instance; // lazy init singleton
+    private Disk disk;
+    public String workingDirectoryAbsolutePath; // expected value example: /dir1/dir2
+    private Directory workingDirectory;
+    private boolean isRunning;
 
-    static final int DEFAULTDIRECTORYSIZE = 40;
-    static final int DEFAULTDOCUMENTSIZE = 40;
+    public static final int defaultDirectorySize = 40;
+    public static final int defaultDocumentSize = 40;
 
     private System() {
         isRunning = true;
-        selectedDiskIndex = 0;
-        disks = new ArrayList<>();
-        workingDirectoryAbsolutePath = "/";
+        disk = null;
+        workingDirectoryAbsolutePath = "";
         workingDirectory = null;
     }
-    private static void createInstance() {
-        if (System.systemInstance == null) {
-            System.systemInstance = new System();
-        }
-    }
+
     public static System getInstance() {
-        if (System.systemInstance == null) {
-            createInstance();
+        if (System.instance == null) {
+            System.instance = new System();
         }
-        return System.systemInstance;
+        return System.instance;
     }
 
     // maybe change the function name later
-    public static Directory traverseDirectoriesRecursive(String targetedPath, Directory workingDirectory) {
-        // expected cases for targetedPath:
-        // "/dir1": invalid input (this function cant handle absolute path)
-        // "./dir1": valid input (relative path)
-        // "dir1": valid input (relative path)
-        if (targetedPath.isEmpty()) {
+    public static Directory traverseDirectoriesRecursive(String targetPath, Directory workingDirectory) {
+        // note:
+        // 1. this function doesn't support parent directory navigation
+        // so this function can be applied in different situations
+        // 2. this function defaults to relative pathing (to the workingDirectory argument)
+
+        if (targetPath.isEmpty()) {
             return workingDirectory;
         }
-        if (targetedPath.startsWith("/")) {
+        if (targetPath.endsWith(":")) {
+            // we dont mind trailing :, just like in shell we don't mind
+            // cd ./randomFolder/
+            targetPath = targetPath.substring(0, targetPath.length() - 1);
+        }
+        int delimiterIndex = targetPath.indexOf(':');
+        String targetedDirectoryName;
+        if (delimiterIndex != -1) {
+            targetedDirectoryName = targetPath.substring(0, delimiterIndex);
+        } else {
+            targetedDirectoryName = targetPath;
+        }
 
-            return null;
-        }
-        if (!targetedPath.endsWith("/")) {
-            targetedPath += "/";
-        }
-        int delimiterIndex = targetedPath.indexOf('/');
-        String targetedDirectoryName = targetedPath.substring(0, delimiterIndex);
         for (Directory directory : workingDirectory.directories) {
             if (directory.name.equals(targetedDirectoryName)) {
-                return traverseDirectoriesRecursive(targetedPath.substring(delimiterIndex + 1), directory);
+                if (delimiterIndex != -1) {
+                    return traverseDirectoriesRecursive(targetPath.substring(delimiterIndex + 1), directory);
+                }
+                return directory;
             }
         }
-        return null;
+        return null; // no such directory found
     }
 
     public static Disk getWorkingDisk() {
-        if (!systemInstance.disks.isEmpty()) {
-            return systemInstance.disks.get(systemInstance.selectedDiskIndex);
-        } else {
-            return null;
-        }
+        return instance.disk;
     }
 
     // WIP
@@ -71,89 +70,175 @@ public class System {
         if (workingDisk == null) {
             throw new IllegalArgumentException("Unexpected behavior");
         }
-
-        if (systemInstance.workingDirectoryAbsolutePath.equals("/")) {
-            return workingDisk.rootDirectory;
-        }
-        return traverseDirectoriesRecursive(systemInstance.workingDirectoryAbsolutePath, workingDisk.rootDirectory);
+        return instance.workingDirectory;
     }
 
     public static void newDisk(int diskSize) {
-        systemInstance.disks.add(new Disk(diskSize));
+        instance.disk = new Disk(diskSize);
+        instance.workingDirectory = instance.disk.rootDirectory;
     }
 
     public static void newDirectory(String dirName) {
-        getWorkingDirectory().directories.add(new Directory(dirName));
-        handleDiskSizeChange(DEFAULTDIRECTORYSIZE);
+        Directory newDirectory = new Directory(dirName);
+        getWorkingDirectory().directories.add(newDirectory);
+        getWorkingDisk().handleSizeChange(newDirectory.size());
     }
 
     public static void newDocument(String docName, String docType, String docContent) {
-        getWorkingDirectory().files.add(new Document(docName, docType, docContent));
-        handleDiskSizeChange(DEFAULTDOCUMENTSIZE);
+        Document newDocument = new Document(docName, docType, docContent);
+        getWorkingDirectory().documents.add(newDocument);
+        getWorkingDisk().handleSizeChange(newDocument.size());
     }
 
+    // only delete doc now, later change
     public static void deleteFile(String fileName) {
-        List<Document> files = getWorkingDirectory().files;
-        for (int i = 0; i < files.size(); i++) {
-            if (files.get(i).name.equals(fileName)) {
-                int sizeChange = files.get(i).size();
-                handleDiskSizeChange(sizeChange);
-                files.remove(i);
+        List<Document> documents = getWorkingDirectory().documents;
+        for (int i = 0; i < documents.size(); i++) {
+            if (documents.get(i).name.equals(fileName)) {
+                int sizeChange = documents.get(i).size();
+                getWorkingDisk().handleSizeChange(- sizeChange);
+                documents.remove(i);
                 return;
             }
         }
-//        throw whatever exception idk might do this later
+        List<Directory> directories = getWorkingDirectory().directories;
+        for (int i = 0; i < directories.size(); i++) {
+            if (directories.get(i).name.equals(fileName)) {
+                int sizeChange = directories.get(i).size();
+                getWorkingDisk().handleSizeChange(- sizeChange);
+                directories.remove(i);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Targeted file not found!");
     }
 
     public static void renameFile(String oldFileName, String newFileName) {
-        List<Document> files = getWorkingDirectory().files;
-        for (Document file : files) {
-            if (file.name.equals(oldFileName)) {
-                file.name = newFileName;
+        List<Document> documents = getWorkingDirectory().documents;
+        for (Document document : documents) {
+            if (document.name.equals(oldFileName)) {
+                document.name = newFileName;
                 return;
             }
         }
-//        throw whatever exception idk might do this later
+        List<Directory> directories = getWorkingDirectory().directories;
+        for (Directory directory : directories) {
+            if (directory.name.equals(oldFileName)) {
+                directory.name = newFileName;
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Targeted file not found!");
     }
 
-    public static void changeDirectory(String newDirectoryName) {
-        while (newDirectoryName.startsWith("..")) {
-            navigateParentDirectory();
-            int delimiterIndex = newDirectoryName.indexOf('/');
-            newDirectoryName = newDirectoryName.substring(delimiterIndex + 1);
-        }
-        Directory newDirectory = traverseDirectoriesRecursive(newDirectoryName, systemInstance.workingDirectory);
-        if (newDirectory != null) {
-            systemInstance.workingDirectory = newDirectory;
-            systemInstance.workingDirectoryAbsolutePath += "/" + newDirectoryName;
-        } else {
-            java.lang.System.out.println("Targeted folder cannot be found!");
-        }
-    }
-
-    private static void navigateParentDirectory() {
-        if (systemInstance.workingDirectoryAbsolutePath.equals("/")) {
-            java.lang.System.out.println("Base directory is already reached!");
+    public static void changeDirectory(String targetPath) {
+        targetPath = parsePath(targetPath);
+        java.lang.System.out.println(targetPath);
+        if (targetPath.isEmpty()) {
             return;
         }
-        int delimiterIndex = systemInstance.workingDirectoryAbsolutePath.lastIndexOf('/');
-        systemInstance.workingDirectoryAbsolutePath = systemInstance.workingDirectoryAbsolutePath.substring(0, delimiterIndex);
+        // Please read parsePath() to understand why this works
+        Directory newDirectory = instance.workingDirectory;
+        String newDirectoryAbsolutePath = instance.workingDirectoryAbsolutePath;
+        while (targetPath.startsWith("..")) {
+            if (newDirectoryAbsolutePath.isEmpty()) {
+                throw new IllegalArgumentException("Root directory is already reached!");
+            }
+            int absolutePathDelimiterIndex = newDirectoryAbsolutePath.lastIndexOf(":");
+            if (absolutePathDelimiterIndex != -1) {
+                newDirectoryAbsolutePath = newDirectoryAbsolutePath.substring(0, absolutePathDelimiterIndex);
+            } else {
+                newDirectoryAbsolutePath = "";
+            }
+            newDirectory = traverseDirectoriesRecursive(newDirectoryAbsolutePath, instance.disk.rootDirectory);
+            int targetPathDelimiterIndex = targetPath.indexOf(":");
+            if (targetPathDelimiterIndex != -1) {
+                targetPath = targetPath.substring(targetPathDelimiterIndex + 1);
+            } else {
+                targetPath = "";
+            }
+        }
+//        java.lang.System.out.println(targetPath);
+//        java.lang.System.out.println(newDirectory.name);
+        newDirectory = traverseDirectoriesRecursive(targetPath, newDirectory);
+        if (!targetPath.isEmpty()) {
+            if (!newDirectoryAbsolutePath.isEmpty()) {
+                newDirectoryAbsolutePath += ":" + targetPath;
+            } else {
+                newDirectoryAbsolutePath += targetPath;
+
+            }
+        }
+        if (newDirectory != null) {
+            instance.workingDirectory = newDirectory;
+            instance.workingDirectoryAbsolutePath = newDirectoryAbsolutePath;
+        } else {
+            throw new IllegalArgumentException("Targeted directory cannot be found!");
+        }
     }
 
-    private static void handleDiskSizeChange(int sizeChange) {
-        final Disk workingDisk = getWorkingDisk();
-        if (workingDisk == null) {
-            throw new IllegalArgumentException("Unexpected behavior");
+//    private static Directory returnParentDirectory(String workingDirectoryAbsolutePath) {
+//        if (workingDirectoryAbsolutePath.isEmpty()) {
+//        }
+//        int delimiterIndex = workingDirectoryAbsolutePath.lastIndexOf(':');
+//        String newWorkingDirectoryAbsolutePath;
+//        if (delimiterIndex != 0) { // it means the parent directory is root directory
+//            newWorkingDirectoryAbsolutePath = workingDirectoryAbsolutePath.substring(0, delimiterIndex);
+//        } else {
+//            newWorkingDirectoryAbsolutePath = "";
+//        }
+//        java.lang.System.out.println(newWorkingDirectoryAbsolutePath);
+//        Directory newWorkingDirectory = traverseDirectoriesRecursive(newWorkingDirectoryAbsolutePath, instance.disk.rootDirectory);
+//        if (newWorkingDirectory != null) {
+//            return newWorkingDirectory;
+//        } else {
+//            throw new IllegalArgumentException("Unexpected: parent directory is null but is unhandled");
+//        }
+//    }
+
+    private static String parsePath(String targetPath) {
+        if (!targetPath.startsWith("$:")) {
+            throw new IllegalArgumentException("Invalid path!");
         }
-        if (workingDisk.currentSize + sizeChange >= workingDisk.maxSize) {
-            java.lang.System.out.println("Disk size exceeded!");
-        } else {
-            workingDisk.currentSize += sizeChange;
+        // ** add a regular expression to check if the path is in correct format here
+        targetPath = targetPath.substring(2);
+
+        // optimization for parent directory navigation
+        List<String> optimizedFileNames = new ArrayList<String>();
+        StringBuilder optimizedPathBuilder = new StringBuilder();
+        while (!targetPath.isEmpty()) {
+            int delimiterIndex = targetPath.indexOf(':');
+            String directoryName;
+            if (delimiterIndex != -1) {
+                directoryName = targetPath.substring(0, delimiterIndex);
+            } else {
+                directoryName = targetPath;
+                targetPath = "";
+            }
+            if (optimizedFileNames.isEmpty()) {
+                optimizedFileNames.add(directoryName);
+            } else if (directoryName.equals("..") && !optimizedFileNames.getLast().equals("..")) {
+                optimizedFileNames.removeLast();
+            } else {
+                optimizedFileNames.add(directoryName);
+            }
+            targetPath = targetPath.substring(delimiterIndex + 1);
         }
+        for (int i = 0; i < optimizedFileNames.size(); i += 1) {
+            optimizedPathBuilder.append(optimizedFileNames.get(i));
+            if (i != optimizedFileNames.size() - 1) {
+                optimizedPathBuilder.append(":");
+            }
+        }
+        return optimizedPathBuilder.isEmpty() ? "" : optimizedPathBuilder.toString();
     }
 
     public static void terminate() {
-        systemInstance.isRunning = false;
+        instance.isRunning = false;
+    }
+
+    public static boolean isRunning() {
+        return instance.isRunning;
     }
 
 //    public static List<> listFiles() {
