@@ -1,13 +1,14 @@
+import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CLI {
     private static Scanner scannerObj = new Scanner(java.lang.System.in);
     public static void renderCLI() {
+        java.lang.System.out.println();
         final Disk workingDisk = System.getWorkingDisk();
-        if (System.getInstance().disks.isEmpty()) {
+        if (workingDisk == null) {
             promptCreateDisk();
-        } else if (workingDisk == null) {
             promptLoadDisk();
         }
         handleInput();
@@ -18,7 +19,7 @@ public class CLI {
     }
 
     private static void promptLoadDisk() {
-        java.lang.System.out.println("You have not selected a disk yet, Input \"load path\" to load a file in your local file system as the virtual disk.");
+        java.lang.System.out.println("To load a local file in the virtual disk, Input \"load path\" to load a file in your local file system as the virtual disk.");
     }
 
     private static void handleInput() {
@@ -52,6 +53,22 @@ public class CLI {
                     System.newDirectory(dirName);
                     return;
                 }
+                case "delete": {
+                    String fileName = inputList[1];
+                    System.deleteFile(fileName);
+                    return;
+                }
+                case "rename": {
+                    String fileName = inputList[1];
+                    String newFileName = inputList[2];
+                    System.renameFile(fileName, newFileName);
+                    return;
+                }
+                case "changeDir": {
+                    String dirName = inputList[1];
+                    System.changeDirectory(dirName);
+                    return;
+                }
                 case "quit": {
                     System.terminate();
                     return;
@@ -62,6 +79,9 @@ public class CLI {
             }
         } catch (IndexOutOfBoundsException e) {
             java.lang.System.out.println("Inadequate arguments, please make sure necessary arguments are provided!");
+            java.lang.System.out.println(e.toString());
+        } catch (IllegalArgumentException e) {
+            java.lang.System.out.println(e.toString());
         }
     }
 }
