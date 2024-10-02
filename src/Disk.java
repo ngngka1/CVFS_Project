@@ -12,4 +12,12 @@ public class Disk {
         rootDirectory = new Directory("", true);
     }
 
+    public void handleSizeChange(int sizeChange) {
+        if (currentSize + sizeChange >= maxSize) {
+            throw new IllegalArgumentException("Disk size exceeded!");
+        } else {
+            currentSize += sizeChange;
+        }
+    }
+
 }
