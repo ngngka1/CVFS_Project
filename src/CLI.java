@@ -97,10 +97,14 @@ public class CLI {
 
     private static String parsePath(String targetPath) {
         if (!targetPath.startsWith("$:")) {
-            throw new IllegalArgumentException("Invalid path!");
+            throw new IllegalArgumentException("Please specify current working directory by $:path !");
         }
-        // ** add a regular expression to check if the path is in correct format here
         targetPath = targetPath.substring(2);
+        String regex = "^([a-zA-Z0-9]+|[.]{2})(:[a-zA-Z0-9]+|:[.]{2})*$";
+        if (!targetPath.matches(regex)) {
+            throw new IllegalArgumentException("Invalid path!");
+
+        }
 
         // optimization for parent directory navigation
         List<String> optimizedFileNames = new ArrayList<String>();
