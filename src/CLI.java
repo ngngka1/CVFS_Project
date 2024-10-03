@@ -70,11 +70,11 @@ public class CLI {
                     return;
                 }
                 case "list": {
-                    System.listFiles();
+                    System.listFiles(false);
                     return;
                 }
                 case "rList": {
-                    System.recursiveListFiles();
+                    System.listFiles(true);
                     return;
                 }
                 case "quit": {

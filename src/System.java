@@ -211,23 +211,15 @@ class System {
         return optimizedPathBuilder.isEmpty() ? "" : optimizedPathBuilder.toString();
     }
 
-    public static void listFiles() {
+    public static void listFiles(boolean isRecursive) {
         Directory workingDirectory = getWorkingDirectory();
         java.lang.System.out.println("name  type  size");
-        int fileCount = listFiles(workingDirectory, "", false);
+        int fileCount = listFiles(workingDirectory, "", isRecursive);
         java.lang.System.out.println("total number of files: " + fileCount);
         java.lang.System.out.println("total size of files: " + workingDirectory.size());
     }
 
-    public static void recursiveListFiles() {
-        Directory workingDirectory = getWorkingDirectory();
-        java.lang.System.out.println("name  type  size");
-        int fileCount = listFiles(workingDirectory, "", true);
-        java.lang.System.out.println("total number of files: " + fileCount);
-        java.lang.System.out.println("total size of files: " + workingDirectory.size());
-    }
-
-    public static int listFiles(Directory currentDirectory, String indentation, boolean isRecursive) {
+    private static int listFiles(Directory currentDirectory, String indentation, boolean isRecursive) {
         int fileCount = currentDirectory.documents.size() + currentDirectory.directories.size();
         for (Document document : currentDirectory.documents) {
             java.lang.System.out.print(indentation);
