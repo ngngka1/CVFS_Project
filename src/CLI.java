@@ -69,6 +69,10 @@ public class CLI {
                     System.changeDirectory(dirName);
                     return;
                 }
+                case "list": {
+                    System.listFiles();
+                    return;
+                }
                 case "quit": {
                     System.terminate();
                     return;
