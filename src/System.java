@@ -80,14 +80,14 @@ class System {
 
     public static void newDirectory(String dirName) {
         Directory newDirectory = new Directory(dirName);
-        getWorkingDirectory().directories.add(newDirectory);
         getWorkingDisk().handleSizeChange(newDirectory.size());
+        getWorkingDirectory().directories.add(newDirectory);
     }
 
     public static void newDocument(String docName, String docType, String docContent) {
         Document newDocument = new Document(docName, docType, docContent);
-        getWorkingDirectory().documents.add(newDocument);
         getWorkingDisk().handleSizeChange(newDocument.size());
+        getWorkingDirectory().documents.add(newDocument);
     }
 
     // only delete doc now, later change
@@ -133,7 +133,6 @@ class System {
 
     public static void changeDirectory(String targetPath) {
         targetPath = parsePath(targetPath);
-        java.lang.System.out.println(targetPath);
         if (targetPath.isEmpty()) {
             return;
         }
@@ -158,8 +157,6 @@ class System {
                 targetPath = "";
             }
         }
-//        java.lang.System.out.println(targetPath);
-//        java.lang.System.out.println(newDirectory.name);
         newDirectory = traverseDirectoriesRecursive(targetPath, newDirectory);
         if (!targetPath.isEmpty()) {
             if (!newDirectoryAbsolutePath.isEmpty()) {
@@ -176,25 +173,6 @@ class System {
             throw new IllegalArgumentException("Targeted directory cannot be found!");
         }
     }
-
-//    private static Directory returnParentDirectory(String workingDirectoryAbsolutePath) {
-//        if (workingDirectoryAbsolutePath.isEmpty()) {
-//        }
-//        int delimiterIndex = workingDirectoryAbsolutePath.lastIndexOf(':');
-//        String newWorkingDirectoryAbsolutePath;
-//        if (delimiterIndex != 0) { // it means the parent directory is root directory
-//            newWorkingDirectoryAbsolutePath = workingDirectoryAbsolutePath.substring(0, delimiterIndex);
-//        } else {
-//            newWorkingDirectoryAbsolutePath = "";
-//        }
-//        java.lang.System.out.println(newWorkingDirectoryAbsolutePath);
-//        Directory newWorkingDirectory = traverseDirectoriesRecursive(newWorkingDirectoryAbsolutePath, instance.disk.rootDirectory);
-//        if (newWorkingDirectory != null) {
-//            return newWorkingDirectory;
-//        } else {
-//            throw new IllegalArgumentException("Unexpected: parent directory is null but is unhandled");
-//        }
-//    }
 
     private static String parsePath(String targetPath) {
         if (!targetPath.startsWith("$:")) {
@@ -231,6 +209,31 @@ class System {
             }
         }
         return optimizedPathBuilder.isEmpty() ? "" : optimizedPathBuilder.toString();
+    }
+
+    public static void listFiles() {
+        Directory workingDirectory = getWorkingDirectory();
+        int totalSize = 0;
+        java.lang.System.out.println("|  name  |  type  |  size  |");
+        for (Document document : workingDirectory.documents) {
+            java.lang.System.out.print("| ");
+            java.lang.System.out.print(document.name + " | ");
+            java.lang.System.out.print(document.type + " | ");
+            int docSize = document.size();
+            java.lang.System.out.print(docSize + " |\n");
+            totalSize += docSize;
+        }
+        for (Directory directory : workingDirectory.directories) {
+            java.lang.System.out.print("| ");
+            java.lang.System.out.print(directory.name + " | ");
+            java.lang.System.out.print("directory | ");
+            int dirSize = directory.size();
+            java.lang.System.out.print(dirSize + " |\n");
+            totalSize += dirSize;
+        }
+        int fileCount = workingDirectory.documents.size() + workingDirectory.directories.size();
+        java.lang.System.out.println("total number of files: " + fileCount);
+        java.lang.System.out.println("total size of files: " + totalSize);
     }
 
     public static void terminate() {
