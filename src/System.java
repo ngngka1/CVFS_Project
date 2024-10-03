@@ -132,11 +132,10 @@ class System {
     }
 
     public static void changeDirectory(String targetPath) {
-        targetPath = parsePath(targetPath);
+        // Note: targetPath is optimized in CLI.parsePath();
         if (targetPath.isEmpty()) {
             return;
         }
-        // Please read parsePath() to understand why this works
         Directory newDirectory = instance.workingDirectory;
         String newDirectoryAbsolutePath = instance.workingDirectoryAbsolutePath;
         while (targetPath.startsWith("..")) {
@@ -172,43 +171,6 @@ class System {
         } else {
             throw new IllegalArgumentException("Targeted directory cannot be found!");
         }
-    }
-
-    private static String parsePath(String targetPath) {
-        if (!targetPath.startsWith("$:")) {
-            throw new IllegalArgumentException("Invalid path!");
-        }
-        // ** add a regular expression to check if the path is in correct format here
-        targetPath = targetPath.substring(2);
-
-        // optimization for parent directory navigation
-        List<String> optimizedFileNames = new ArrayList<String>();
-        StringBuilder optimizedPathBuilder = new StringBuilder();
-        while (!targetPath.isEmpty()) {
-            int delimiterIndex = targetPath.indexOf(':');
-            String directoryName;
-            if (delimiterIndex != -1) {
-                directoryName = targetPath.substring(0, delimiterIndex);
-            } else {
-                directoryName = targetPath;
-                targetPath = "";
-            }
-            if (optimizedFileNames.isEmpty()) {
-                optimizedFileNames.add(directoryName);
-            } else if (directoryName.equals("..") && !optimizedFileNames.getLast().equals("..")) {
-                optimizedFileNames.removeLast();
-            } else {
-                optimizedFileNames.add(directoryName);
-            }
-            targetPath = targetPath.substring(delimiterIndex + 1);
-        }
-        for (int i = 0; i < optimizedFileNames.size(); i += 1) {
-            optimizedPathBuilder.append(optimizedFileNames.get(i));
-            if (i != optimizedFileNames.size() - 1) {
-                optimizedPathBuilder.append(":");
-            }
-        }
-        return optimizedPathBuilder.isEmpty() ? "" : optimizedPathBuilder.toString();
     }
 
     public static void listFiles(boolean isRecursive) {

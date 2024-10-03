@@ -1,5 +1,6 @@
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class CLI {
@@ -65,8 +66,9 @@ public class CLI {
                     return;
                 }
                 case "changeDir": {
-                    String dirName = inputList[1];
-                    System.changeDirectory(dirName);
+                    String dirPath = inputList[1];
+                    dirPath = parsePath(dirPath);
+                    System.changeDirectory(dirPath);
                     return;
                 }
                 case "list": {
@@ -91,5 +93,42 @@ public class CLI {
         } catch (IllegalArgumentException e) {
             java.lang.System.out.println(e.toString());
         }
+    }
+
+    private static String parsePath(String targetPath) {
+        if (!targetPath.startsWith("$:")) {
+            throw new IllegalArgumentException("Invalid path!");
+        }
+        // ** add a regular expression to check if the path is in correct format here
+        targetPath = targetPath.substring(2);
+
+        // optimization for parent directory navigation
+        List<String> optimizedFileNames = new ArrayList<String>();
+        StringBuilder optimizedPathBuilder = new StringBuilder();
+        while (!targetPath.isEmpty()) {
+            int delimiterIndex = targetPath.indexOf(':');
+            String directoryName;
+            if (delimiterIndex != -1) {
+                directoryName = targetPath.substring(0, delimiterIndex);
+            } else {
+                directoryName = targetPath;
+                targetPath = "";
+            }
+            if (optimizedFileNames.isEmpty()) {
+                optimizedFileNames.add(directoryName);
+            } else if (directoryName.equals("..") && !optimizedFileNames.getLast().equals("..")) {
+                optimizedFileNames.removeLast();
+            } else {
+                optimizedFileNames.add(directoryName);
+            }
+            targetPath = targetPath.substring(delimiterIndex + 1);
+        }
+        for (int i = 0; i < optimizedFileNames.size(); i += 1) {
+            optimizedPathBuilder.append(optimizedFileNames.get(i));
+            if (i != optimizedFileNames.size() - 1) {
+                optimizedPathBuilder.append(":");
+            }
+        }
+        return optimizedPathBuilder.isEmpty() ? "" : optimizedPathBuilder.toString();
     }
 }
