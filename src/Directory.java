@@ -31,4 +31,57 @@ public class Directory {
         }
         return totalSize;
     }
+
+    public void newDirectory(String dirName) {
+        Directory newDirectory = new Directory(dirName);
+        System.getWorkingDisk().handleSizeChange(newDirectory.size());
+        this.directories.add(newDirectory);
+    }
+
+    public void newDocument(String docName, String docType, String docContent) {
+        Document newDocument = new Document(docName, docType, docContent);
+        System.getWorkingDisk().handleSizeChange(newDocument.size());
+        this.documents.add(newDocument);
+    }
+
+    public void deleteFile(String fileName) {
+        List<Document> documents = this.documents;
+        for (int i = 0; i < documents.size(); i++) {
+            if (documents.get(i).name.equals(fileName)) {
+                int sizeChange = documents.get(i).size();
+                System.getWorkingDisk().handleSizeChange(- sizeChange);
+                documents.remove(i);
+                return;
+            }
+        }
+        List<Directory> directories = this.directories;
+        for (int i = 0; i < directories.size(); i++) {
+            if (directories.get(i).name.equals(fileName)) {
+                int sizeChange = directories.get(i).size();
+                System.getWorkingDisk().handleSizeChange(- sizeChange);
+                directories.remove(i);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Targeted file not found!");
+    }
+
+    public void removeFile(String oldFileName, String newFileName) {
+        List<Document> documents = this.documents;
+        for (Document document : documents) {
+            if (document.name.equals(oldFileName)) {
+                document.name = newFileName;
+                return;
+            }
+        }
+        List<Directory> directories = this.directories;
+        for (Directory directory : directories) {
+            if (directory.name.equals(oldFileName)) {
+                directory.name = newFileName;
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Targeted file not found!");
+    }
+
 }
