@@ -213,27 +213,40 @@ class System {
 
     public static void listFiles() {
         Directory workingDirectory = getWorkingDirectory();
-        int totalSize = 0;
-        java.lang.System.out.println("|  name  |  type  |  size  |");
-        for (Document document : workingDirectory.documents) {
-            java.lang.System.out.print("| ");
-            java.lang.System.out.print(document.name + " | ");
-            java.lang.System.out.print(document.type + " | ");
-            int docSize = document.size();
-            java.lang.System.out.print(docSize + " |\n");
-            totalSize += docSize;
-        }
-        for (Directory directory : workingDirectory.directories) {
-            java.lang.System.out.print("| ");
-            java.lang.System.out.print(directory.name + " | ");
-            java.lang.System.out.print("directory | ");
-            int dirSize = directory.size();
-            java.lang.System.out.print(dirSize + " |\n");
-            totalSize += dirSize;
-        }
-        int fileCount = workingDirectory.documents.size() + workingDirectory.directories.size();
+        java.lang.System.out.println("name  type  size");
+        int fileCount = listFiles(workingDirectory, "", false);
         java.lang.System.out.println("total number of files: " + fileCount);
-        java.lang.System.out.println("total size of files: " + totalSize);
+        java.lang.System.out.println("total size of files: " + workingDirectory.size());
+    }
+
+    public static void recursiveListFiles() {
+        Directory workingDirectory = getWorkingDirectory();
+        java.lang.System.out.println("name  type  size");
+        int fileCount = listFiles(workingDirectory, "", true);
+        java.lang.System.out.println("total number of files: " + fileCount);
+        java.lang.System.out.println("total size of files: " + workingDirectory.size());
+    }
+
+    public static int listFiles(Directory currentDirectory, String indentation, boolean isRecursive) {
+        int fileCount = currentDirectory.documents.size() + currentDirectory.directories.size();
+        for (Document document : currentDirectory.documents) {
+            java.lang.System.out.print(indentation);
+            java.lang.System.out.print(document.name + "  ");
+            java.lang.System.out.print(document.type + "  ");
+            int docSize = document.size();
+            java.lang.System.out.print(docSize + "\n");
+        }
+        for (Directory directory : currentDirectory.directories) {
+            java.lang.System.out.print(indentation);
+            java.lang.System.out.print(directory.name + "  ");
+            java.lang.System.out.print("directory  ");
+            int dirSize = directory.size();
+            java.lang.System.out.print(dirSize + "\n");
+            if (isRecursive) {
+                fileCount += listFiles(directory, indentation + "  ", isRecursive);
+            }
+        }
+        return fileCount;
     }
 
     public static void terminate() {

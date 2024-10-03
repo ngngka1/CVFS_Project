@@ -73,6 +73,10 @@ public class CLI {
                     System.listFiles();
                     return;
                 }
+                case "rList": {
+                    System.recursiveListFiles();
+                    return;
+                }
                 case "quit": {
                     System.terminate();
                     return;
