@@ -79,56 +79,19 @@ class System {
     }
 
     public static void newDirectory(String dirName) {
-        Directory newDirectory = new Directory(dirName);
-        getWorkingDisk().handleSizeChange(newDirectory.size());
-        getWorkingDirectory().directories.add(newDirectory);
+        getWorkingDirectory().newDirectory(dirName);
     }
 
     public static void newDocument(String docName, String docType, String docContent) {
-        Document newDocument = new Document(docName, docType, docContent);
-        getWorkingDisk().handleSizeChange(newDocument.size());
-        getWorkingDirectory().documents.add(newDocument);
+        getWorkingDirectory().newDocument(docName, docType, docContent);
     }
 
-    // only delete doc now, later change
     public static void deleteFile(String fileName) {
-        List<Document> documents = getWorkingDirectory().documents;
-        for (int i = 0; i < documents.size(); i++) {
-            if (documents.get(i).name.equals(fileName)) {
-                int sizeChange = documents.get(i).size();
-                getWorkingDisk().handleSizeChange(- sizeChange);
-                documents.remove(i);
-                return;
-            }
-        }
-        List<Directory> directories = getWorkingDirectory().directories;
-        for (int i = 0; i < directories.size(); i++) {
-            if (directories.get(i).name.equals(fileName)) {
-                int sizeChange = directories.get(i).size();
-                getWorkingDisk().handleSizeChange(- sizeChange);
-                directories.remove(i);
-                return;
-            }
-        }
-        throw new IllegalArgumentException("Targeted file not found!");
+        getWorkingDirectory().deleteFile(fileName);
     }
 
     public static void renameFile(String oldFileName, String newFileName) {
-        List<Document> documents = getWorkingDirectory().documents;
-        for (Document document : documents) {
-            if (document.name.equals(oldFileName)) {
-                document.name = newFileName;
-                return;
-            }
-        }
-        List<Directory> directories = getWorkingDirectory().directories;
-        for (Directory directory : directories) {
-            if (directory.name.equals(oldFileName)) {
-                directory.name = newFileName;
-                return;
-            }
-        }
-        throw new IllegalArgumentException("Targeted file not found!");
+        getWorkingDirectory().removeFile(oldFileName, newFileName);
     }
 
     public static void changeDirectory(String targetPath) {
@@ -210,12 +173,4 @@ class System {
     public static boolean isRunning() {
         return instance.isRunning;
     }
-
-//    public static List<> listFiles() {
-//
-//    }
 }
-
-//main {
-//    Hero.heroA
-//}
