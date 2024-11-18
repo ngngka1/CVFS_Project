@@ -1,10 +1,17 @@
-public class Main {
+import hk.edu.polyu.comp.comp2021.cvfs.exception.SystemTerminatedException;
+import hk.edu.polyu.comp.comp2021.cvfs.view.CLI;
+
+public class Application {
     public static void main(String[] args) {
-        final System systemInstance = System.getInstance();
-        while (systemInstance.isRunning()) {
-            CLI.renderCLI();
-        }
+        try {
+            CLI.renderCLI("");
+            while (true) {
+                CLI.renderCLI();
+            }
+        } catch (SystemTerminatedException e) {}
     }
+
+
 }
 //Hello
 //newDisk 999
