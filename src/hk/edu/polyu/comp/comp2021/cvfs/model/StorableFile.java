@@ -48,12 +48,12 @@ public abstract class StorableFile extends File implements Storable {
     @Override
     public void rename(String oldFileName, String newFileName) {
         Disk workingDisk = System.getWorkingDisk();
-        if (workingDisk.hasFileName(newFileName)) {
-            throw new IllegalArgumentException("hk.edu.polyu.comp.comp2021.cvfs.model.File with the same name already exists!");
-        }
         List<File> files = getFiles();
         for (File file : files) {
             if (file.getName().equals(oldFileName)) {
+                if (workingDisk.hasFileName(newFileName)) {
+                    throw new IllegalArgumentException("hk.edu.polyu.comp.comp2021.cvfs.model.File with the same name already exists!");
+                }
                 file.setName(newFileName);
                 workingDisk.renameUniqueFileName(oldFileName, newFileName);
                 return;
