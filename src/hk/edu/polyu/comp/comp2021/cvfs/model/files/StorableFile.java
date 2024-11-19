@@ -1,7 +1,7 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model.files;
 
-import hk.edu.polyu.comp.comp2021.cvfs.model.Disk;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
+import hk.edu.polyu.comp.comp2021.cvfs.model.disk.Disk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public abstract class StorableFile extends File implements Storable {
                 return;
             }
         }
-        throw new IllegalArgumentException("Targeted file not found!");
+        throw new IllegalArgumentException("Target file not found!");
     }
 
     @Override
@@ -66,6 +66,6 @@ public abstract class StorableFile extends File implements Storable {
                 return;
             }
         }
-        throw new IllegalArgumentException("Targeted file not found!");
+        throw new IllegalArgumentException("Target file not found!");
     }
 }
