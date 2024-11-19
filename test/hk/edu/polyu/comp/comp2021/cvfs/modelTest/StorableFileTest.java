@@ -54,8 +54,6 @@ class StorableFileTest {
     void testRenameFileAlreadyExists() {
         Document doc1 = new Document("doc4", "txt");
         Document doc2 = new Document("doc5", "txt");
-        java.lang.System.out.println(doc1.getName());
-        java.lang.System.out.println(doc2.getName());
         assertThrows(IllegalArgumentException.class, () -> System.getWorkingDirectory().rename("doc4", "doc5"));
     }
 
