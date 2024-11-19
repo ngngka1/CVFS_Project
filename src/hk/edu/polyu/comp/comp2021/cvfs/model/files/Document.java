@@ -1,9 +1,9 @@
-package hk.edu.polyu.comp.comp2021.cvfs.model;
+package hk.edu.polyu.comp.comp2021.cvfs.model.files;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
-class Document extends File {
+public class Document extends File {
     public static final int DEFAULT_SIZE = 40;
     private static final HashSet<String> ALLOWED_TYPE = new HashSet<>(Arrays.asList("txt", "java", "html", "css"));
     String type;
@@ -30,6 +30,10 @@ class Document extends File {
 
     public int size() {
         return DEFAULT_SIZE + content.length() * 2;
+    }
+
+    public String toString() {
+        return getName() + "  " + getType() + "  " + size();
     }
 
 }

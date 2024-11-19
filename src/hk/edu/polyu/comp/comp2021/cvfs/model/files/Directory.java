@@ -1,4 +1,4 @@
-package hk.edu.polyu.comp.comp2021.cvfs.model;
+package hk.edu.polyu.comp.comp2021.cvfs.model.files;
 
 public class Directory extends StorableFile {
     // add a stack for undo/redo action
@@ -10,7 +10,7 @@ public class Directory extends StorableFile {
 
     @Override
     public String getType() {
-        return "hk.edu.polyu.comp.comp2021.cvfs.model.Directory";
+        return "directory";
     }
 
     @Override
@@ -34,4 +34,7 @@ public class Directory extends StorableFile {
         add(newDocument);
     }
 
+    public String toString() {
+        return getName() + "    " + size();
+    }
 }

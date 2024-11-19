@@ -1,5 +1,7 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model;
 
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
+
 import java.util.HashSet;
 
 public class Disk {

@@ -1,4 +1,7 @@
-package hk.edu.polyu.comp.comp2021.cvfs.model;
+package hk.edu.polyu.comp.comp2021.cvfs.model.files;
+
+import hk.edu.polyu.comp.comp2021.cvfs.model.Disk;
+import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +14,7 @@ public abstract class StorableFile extends File implements Storable {
 
     @Override
     public void add(File newFile) {
-        System.getWorkingDisk().handleSizeChange(newFile.size());
+        hk.edu.polyu.comp.comp2021.cvfs.model.System.getWorkingDisk().handleSizeChange(newFile.size());
         files.add(newFile);
     }
 
@@ -35,7 +38,7 @@ public abstract class StorableFile extends File implements Storable {
         for (int i = 0; i < files.size(); i++) {
             File file = files.get(i);
             if (file.getName().equals(fileName)) {
-                Disk workingDisk = System.getWorkingDisk();
+                Disk workingDisk = hk.edu.polyu.comp.comp2021.cvfs.model.System.getWorkingDisk();
                 workingDisk.handleSizeChange(- file.size());
                 workingDisk.deleteUniqueFileName(fileName);
                 files.remove(i);
@@ -49,7 +52,7 @@ public abstract class StorableFile extends File implements Storable {
     public void rename(String oldFileName, String newFileName) {
         Disk workingDisk = System.getWorkingDisk();
         if (workingDisk.hasFileName(newFileName)) {
-            throw new IllegalArgumentException("hk.edu.polyu.comp.comp2021.cvfs.model.File with the same name already exists!");
+            throw new IllegalArgumentException("hk.edu.polyu.comp.comp2021.cvfs.model.files.File with the same name already exists!");
         }
         List<File> files = getFiles();
         for (File file : files) {

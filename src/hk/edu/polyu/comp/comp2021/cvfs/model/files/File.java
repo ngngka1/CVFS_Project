@@ -1,24 +1,28 @@
-package hk.edu.polyu.comp.comp2021.cvfs.model;
+package hk.edu.polyu.comp.comp2021.cvfs.model.files;
 
-public abstract class File {
+import hk.edu.polyu.comp.comp2021.cvfs.model.Disk;
+import hk.edu.polyu.comp.comp2021.cvfs.model.System;
+
+import java.io.Serializable;
+
+public abstract class File implements Serializable {
     private String name;
     abstract public int size();
     abstract public String getType();
 
     protected File(String name) {
         if (name == null) {
-            throw new IllegalArgumentException("hk.edu.polyu.comp.comp2021.cvfs.model.File name cannot be empty!");
+            throw new IllegalArgumentException("File name cannot be empty!");
         }
         Disk workingDisk = System.getWorkingDisk();
         if (!(name.isEmpty() && !workingDisk.hasFileName(""))) {
             if (workingDisk.hasFileName(name)) {
-                throw new IllegalArgumentException("hk.edu.polyu.comp.comp2021.cvfs.model.File with the same name already exists!");
+                throw new IllegalArgumentException("File with the same name already exists!");
             }
             if (!(name.matches("[A-Za-z0-9]+") && name.length() <= 10)) {
                 throw new IllegalArgumentException("Invalid file name!");
             }
         }
-        workingDisk.addUniqueFileName(name);
         setName(name);
     }
 

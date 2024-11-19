@@ -13,6 +13,9 @@ public class Application {
 
 
 }
+// printAllCriteria
+// newSimpleCri ge name contains "123"
+
 //Hello
 //newDisk 999
 //newDir test1

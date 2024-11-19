@@ -65,15 +65,47 @@ public class CommandHandler {
                     return;
                 }
                 case "list": {
-                    System.listFiles(false);
+                    System.listFiles();
                     return;
                 }
                 case "rList": {
-                    System.listFiles(true);
+                    System.rListFiles();
                     return;
                 }
                 case "newSimpleCri": {
-
+                    String criName = inputList[1];
+                    String attrName = inputList[2];
+                    String op = inputList[3];
+                    String val = inputList[4];
+                    System.newSimpleCri(criName, attrName, op, val);
+                    return;
+                }
+                case "newNegation": {
+                    String criName1 = inputList[1];
+                    String criName2 = inputList[2];
+                    System.newNegation(criName1, criName2);
+                    return;
+                }
+                case "newBinaryCri": {
+                    String criName1 = inputList[1];
+                    String criName3 = inputList[2];
+                    String logicOp = inputList[3];
+                    String criName4 = inputList[4];
+                    System.newBinaryCri(criName1, criName3, logicOp, criName4);
+                    return;
+                }
+                case "printAllCriteria": {
+                    System.printAllCriteria();
+                    return;
+                }
+                case "search": {
+                    String criName = inputList[1];
+                    System.search(criName);
+                    return;
+                }
+                case "rSearch": {
+                    String criName = inputList[1];
+                    System.rSearch(criName);
                     return;
                 }
                 case "quit": {
