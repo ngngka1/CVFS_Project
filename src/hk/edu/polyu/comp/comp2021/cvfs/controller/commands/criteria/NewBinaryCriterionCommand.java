@@ -2,7 +2,7 @@ package hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria;
 
 import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.BinaryCriterion;
 import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.Criteria;
-import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.Criterion;
+import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.base.Criterion;
 
 public class NewBinaryCriterionCommand extends NewCriterionCommand {
     public NewBinaryCriterionCommand(String criName1, String criName3, String logicOp, String criName4) {

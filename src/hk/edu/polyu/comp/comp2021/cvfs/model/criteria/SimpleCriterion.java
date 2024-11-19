@@ -1,6 +1,7 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model.criteria;
 
-import hk.edu.polyu.comp.comp2021.cvfs.model.files.File;
+import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.base.Criterion;
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.File;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -46,7 +47,7 @@ public class SimpleCriterion extends Criterion {
                 return file.getName().contains(this.value.substring(1, this.value.length() - 1));
             }
             case "type": {
-                return file.getType().equals(this.value);
+                return file.getType().equals(this.value.substring(1, this.value.length() - 1));
             }
             case "size": {
                 switch (this.operator) {

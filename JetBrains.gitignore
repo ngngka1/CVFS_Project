@@ -46,7 +46,7 @@ cmake-build-*/
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
-# hk.edu.polyu.comp.comp2021.cvfs.model.files.File-based project format
+# hk.edu.polyu.comp.comp2021.cvfs.model.files.base.File-based project format
 *.iws
 
 # IntelliJ

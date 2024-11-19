@@ -3,7 +3,7 @@ package hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.base.StatefulCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
-import hk.edu.polyu.comp.comp2021.cvfs.model.files.File;
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.File;
 
 public class DeleteFileCommand extends StatefulCommand {
     private final Directory workingDirectory;

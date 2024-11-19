@@ -3,10 +3,10 @@ package hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.base.Command;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.Criteria;
-import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.Criterion;
+import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.base.Criterion;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
-import hk.edu.polyu.comp.comp2021.cvfs.model.files.File;
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.File;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +43,9 @@ public class SearchFilesCommand extends Command {
                 int[] fileCountAndSize = new int[] {0, 0};
                 if (criterion == null || criterion.check(file)) {
                     output.add(indentation + file.toDisplayString());
-                    if (isRecursive) {
-                        fileCountAndSize = searchFilesHelper(output, (Directory) file, indentation + "  ", isRecursive, null);
-                    }
+//                    if (isRecursive) {
+//                        fileCountAndSize = searchFilesHelper(output, (Directory) file, indentation + "  ", isRecursive, null);
+//                    }
                     fileCount++;
                     // note: fileSize will be added later outside if block
                 } else if (isRecursive) {
@@ -65,6 +65,7 @@ public class SearchFilesCommand extends Command {
     @Override
     public void run() {
         Criterion criterion = Criteria.get(criName);
+        if (criterion == null) throw new IllegalArgumentException("Criterion not found!");
         searchFilesHelper(isRecursive, criterion);
     }
 }

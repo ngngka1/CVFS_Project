@@ -1,6 +1,9 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model.files;
 
 
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.File;
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.StorableFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,7 +24,7 @@ public class Directory extends StorableFile {
     @Override
     public int size() {
         int totalSize = DEFAULT_SIZE;
-        for (File file : files) {
+        for (File file : getFiles()) {
             totalSize += file.size();
         }
         return totalSize;
@@ -40,7 +43,7 @@ public class Directory extends StorableFile {
     }
 
     public String toDisplayString() {
-        return getName() + "        " + size();
+        return getName() + " " + size();
     }
 
     @Override
@@ -52,7 +55,7 @@ public class Directory extends StorableFile {
         } catch (IOException e) {
             throw new RuntimeException("Directory creation failed");
         }
-        for (File file : files) {
+        for (File file : getFiles()) {
             file.save(path);
         }
     }

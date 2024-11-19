@@ -1,6 +1,6 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model.files;
 
-import hk.edu.polyu.comp.comp2021.cvfs.model.System;
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.File;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -38,7 +38,7 @@ public class Document extends File {
     }
 
     public String toDisplayString() {
-        return getName() + "  " + getType() + "  " + size();
+        return getName() + " " + getType() + " " + size();
     }
 
     public void save(String path) {

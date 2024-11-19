@@ -1,14 +1,15 @@
-package hk.edu.polyu.comp.comp2021.cvfs.model.files;
+package hk.edu.polyu.comp.comp2021.cvfs.model.files.base;
 
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.disk.Disk;
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class StorableFile extends File implements Storable {
-    List<File> files = new ArrayList<>();
-    StorableFile(String name) {
+    private final List<File> files = new ArrayList<>();
+    protected StorableFile(String name) {
         super(name);
     }
 

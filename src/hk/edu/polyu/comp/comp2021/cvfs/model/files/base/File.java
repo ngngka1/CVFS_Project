@@ -1,4 +1,4 @@
-package hk.edu.polyu.comp.comp2021.cvfs.model.files;
+package hk.edu.polyu.comp.comp2021.cvfs.model.files.base;
 
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.disk.Disk;
@@ -6,7 +6,7 @@ import hk.edu.polyu.comp.comp2021.cvfs.model.disk.Disk;
 import java.io.Serializable;
 
 
-public abstract class File implements Serializable {
+public abstract class File {
     private String name;
     abstract public void save(String path);
     abstract public int size();

@@ -39,6 +39,7 @@ public class ChangeDirectoryCommand extends StatefulCommand {
         // 2. this function defaults to relative pathing (to the workingDirectory argument)
 
         if (targetPath.isEmpty()) {
+            target = workingDirectory;
             return;
         }
         if (targetPath.endsWith(":")) {
@@ -71,7 +72,7 @@ public class ChangeDirectoryCommand extends StatefulCommand {
     @Override
     public void run() {
         if (target == null) {
-            throw new IllegalArgumentException("Targeted directory cannot be found!");
+            throw new IllegalArgumentException("Target directory cannot be found!");
         }
         System.setWorkingDirectory(target);
         System.setWorkingDirectoryPath(targetPath);

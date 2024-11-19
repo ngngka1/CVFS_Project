@@ -1,5 +1,7 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model.criteria;
 
+import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.base.Criterion;
+
 import java.util.HashMap;
 
 public class Criteria {

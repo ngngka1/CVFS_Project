@@ -1,7 +1,8 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model.criteria;
 
+import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.base.Criterion;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
-import hk.edu.polyu.comp.comp2021.cvfs.model.files.File;
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.File;
 
 public class IsDocumentCriterion extends Criterion {
     private final String name;

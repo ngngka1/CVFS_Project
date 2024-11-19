@@ -1,4 +1,4 @@
-package hk.edu.polyu.comp.comp2021.cvfs.model.files;
+package hk.edu.polyu.comp.comp2021.cvfs.model.files.base;
 
 // unused for now
 
