@@ -1,4 +1,4 @@
-package comp2021.cvfs.modelTest;
+package hk.edu.polyu.comp.comp2021.cvfs.modelTest;
 
 import hk.edu.polyu.comp.comp2021.cvfs.model.Disk;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
