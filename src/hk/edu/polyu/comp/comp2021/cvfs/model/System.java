@@ -277,12 +277,12 @@ public class System {
                             fileCount++;
                             fileSize += fileCountAndSize[1];
                         } else {
-                            output.removeLast();
+                            output.remove(output.size() - 1);
                         }
                     }
                 }
-                fileCount += fileCountAndSize[0];
-                fileSize += fileCountAndSize[1];
+//                fileCount += fileCountAndSize[0];
+//                fileSize += fileCountAndSize[1];
             }
         }
         return new int[] {fileCount, fileSize};

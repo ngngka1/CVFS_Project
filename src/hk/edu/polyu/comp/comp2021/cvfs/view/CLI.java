@@ -8,7 +8,7 @@ public class CLI {
     private static final Scanner scannerObj = new Scanner(java.lang.System.in);
     public static void renderCLI() throws SystemTerminatedException {
         String input = CLI.scannerObj.nextLine();
-        CommandHandler.handleInput(input.strip());
+        CommandHandler.handleInput(input.trim());
     }
 
     public static void renderCLI(String input) throws SystemTerminatedException {
