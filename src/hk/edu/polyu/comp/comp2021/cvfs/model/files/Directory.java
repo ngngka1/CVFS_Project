@@ -34,7 +34,12 @@ public class Directory extends StorableFile {
         add(newDocument);
     }
 
+    public String toDisplayString() {
+        return getName() + "        " + size();
+    }
+
+    @Override
     public String toString() {
-        return getName() + "    " + size();
+
     }
 }

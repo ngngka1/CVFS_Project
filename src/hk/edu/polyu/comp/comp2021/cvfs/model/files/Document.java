@@ -1,5 +1,7 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model.files;
 
+import hk.edu.polyu.comp.comp2021.cvfs.model.System;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -32,7 +34,7 @@ public class Document extends File {
         return DEFAULT_SIZE + content.length() * 2;
     }
 
-    public String toString() {
+    public String toDisplayString() {
         return getName() + "  " + getType() + "  " + size();
     }
 

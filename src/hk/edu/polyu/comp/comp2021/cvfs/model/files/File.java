@@ -28,4 +28,5 @@ public abstract class File implements Serializable {
 
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}
+    abstract public String toDisplayString();
 }
