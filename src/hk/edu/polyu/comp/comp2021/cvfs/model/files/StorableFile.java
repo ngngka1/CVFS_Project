@@ -14,8 +14,11 @@ public abstract class StorableFile extends File implements Storable {
 
     @Override
     public void add(File newFile) {
-        hk.edu.polyu.comp.comp2021.cvfs.model.System.getWorkingDisk().handleSizeChange(newFile.size());
+        Disk workingDisk = hk.edu.polyu.comp.comp2021.cvfs.model.System.getWorkingDisk();
+        workingDisk.handleSizeChange(newFile.size());
         files.add(newFile);
+        workingDisk.addUniqueFileName(newFile.getName());
+
     }
 
     public List<File> getFiles() {
@@ -51,12 +54,13 @@ public abstract class StorableFile extends File implements Storable {
     @Override
     public void rename(String oldFileName, String newFileName) {
         Disk workingDisk = System.getWorkingDisk();
-        if (workingDisk.hasFileName(newFileName)) {
-            throw new IllegalArgumentException("hk.edu.polyu.comp.comp2021.cvfs.model.files.File with the same name already exists!");
-        }
+
         List<File> files = getFiles();
         for (File file : files) {
             if (file.getName().equals(oldFileName)) {
+                if (workingDisk.hasFileName(newFileName)) {
+                    throw new IllegalArgumentException("File with the same name already exists!");
+                }
                 file.setName(newFileName);
                 workingDisk.renameUniqueFileName(oldFileName, newFileName);
                 return;

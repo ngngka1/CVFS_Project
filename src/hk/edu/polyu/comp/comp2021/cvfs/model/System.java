@@ -167,48 +167,6 @@ public class System {
         }
     }
 
-//    public static void changeDirectoryDeprecated(String targetPath) {
-//        // Note: targetPath is optimized in hk.edu.polyu.comp.comp2021.cvfs.view.CLI.parsePath();
-//        if (targetPath.isEmpty()) {
-//            return;
-//        }
-//        hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory newDirectory = instance.workingDirectory;
-//        String newDirectoryAbsolutePath = instance.workingDirectoryAbsolutePath;
-//        while (targetPath.startsWith("..")) {
-//            if (newDirectoryAbsolutePath.isEmpty()) {
-//                throw new IllegalArgumentException("Root directory is already reached!");
-//            }
-//            int absolutePathDelimiterIndex = newDirectoryAbsolutePath.lastIndexOf(":");
-//            if (absolutePathDelimiterIndex != -1) {
-//                newDirectoryAbsolutePath = newDirectoryAbsolutePath.substring(0, absolutePathDelimiterIndex);
-//            } else {
-//                newDirectoryAbsolutePath = "";
-//            }
-//            newDirectory = traverseDirectoriesRecursive(newDirectoryAbsolutePath, instance.disk.rootDirectory);
-//            int targetPathDelimiterIndex = targetPath.indexOf(":");
-//            if (targetPathDelimiterIndex != -1) {
-//                targetPath = targetPath.substring(targetPathDelimiterIndex + 1);
-//            } else {
-//                targetPath = "";
-//            }
-//        }
-//        newDirectory = traverseDirectoriesRecursive(targetPath, newDirectory);
-//        if (!targetPath.isEmpty()) {
-//            if (!newDirectoryAbsolutePath.isEmpty()) {
-//                newDirectoryAbsolutePath += ":" + targetPath;
-//            } else {
-//                newDirectoryAbsolutePath += targetPath;
-//
-//            }
-//        }
-//        if (newDirectory != null) {
-//            instance.workingDirectory = newDirectory;
-//            instance.workingDirectoryAbsolutePath = newDirectoryAbsolutePath;
-//        } else {
-//            throw new IllegalArgumentException("Targeted directory cannot be found!");
-//        }
-//    }
-
     public static void listFiles() {
         listFilesHelper(false);
     }
@@ -243,8 +201,8 @@ public class System {
         for (String line : output) {
             java.lang.System.out.println(line);
         }
-        java.lang.System.out.println("total number of files: " + fileCountAndSize[0]);
-        java.lang.System.out.println("total size of files: " + fileCountAndSize[1]);
+        java.lang.System.out.println("number of matched files: " + fileCountAndSize[0]);
+        java.lang.System.out.println("total size of matched files: " + fileCountAndSize[1]);
     }
 
     private static int[] searchFilesHelper(List<String> output, Directory currentDirectory, String indentation, boolean isRecursive, Criterion criterion) {
@@ -255,34 +213,28 @@ public class System {
 
             if (file instanceof Document) {
                 if (criterion == null || criterion.check(file)) {
-                    output.add(indentation + file.toString());
+                    output.add(indentation + file.toDisplayString());
                     fileCount++;
                     fileSize += s;
                 }
             } else {
-                int[] fileCountAndSize;
+                int[] fileCountAndSize = new int[] {0, 0};
                 if (criterion == null || criterion.check(file)) {
-                    output.add(indentation + file.toString());
+                    output.add(indentation + file.toDisplayString());
                     if (isRecursive) {
                         fileCountAndSize = searchFilesHelper(output, (Directory) file, indentation + "  ", isRecursive, null);
                     }
                     fileCount++;
-//                    fileCount += fileCountAndSize[0];
-//                    fileSize += fileCountAndSize[1];
+                    // note: fileSize will be added later outside if block
                 } else if (isRecursive) {
-                    output.add(indentation + file.toString());
+                    output.add(indentation + file.toDisplayString());
                     fileCountAndSize = searchFilesHelper(output, (Directory) file, indentation + "  ", isRecursive, criterion);
-                    if (criterion != null && !criterion.check(file)) {
-                        if (fileCountAndSize[0] > 0) {
-                            fileCount++;
-                            fileSize += fileCountAndSize[1];
-                        } else {
-                            output.remove(output.size() - 1);
-                        }
+                    if (fileCountAndSize[0] == 0) {
+                        output.remove(output.size() - 1);
                     }
                 }
-//                fileCount += fileCountAndSize[0];
-//                fileSize += fileCountAndSize[1];
+                fileCount += fileCountAndSize[0];
+                fileSize += fileCountAndSize[1];
             }
         }
         return new int[] {fileCount, fileSize};
@@ -293,11 +245,11 @@ public class System {
         int fileSize = 0;
         for (File file : currentDirectory.getFiles()) {
             int s = file.size();
-            java.lang.System.out.print(indentation + file);
+            java.lang.System.out.println(indentation + file);
             if ((file instanceof Directory) && isRecursive) {
                 int[] fileCountAndSize = listFilesHelper((Directory) file, indentation + "  ", isRecursive);
                 fileCount += fileCountAndSize[0];
-                s = fileCountAndSize[1];
+//                s = fileCountAndSize[1];
             }
             fileSize += s;
             fileCount++;

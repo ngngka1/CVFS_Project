@@ -16,4 +16,6 @@ public class Criteria {
     public static Criterion[] getAll() {
         return criteria.values().toArray(new Criterion[0]);
     }
+
+
 }
