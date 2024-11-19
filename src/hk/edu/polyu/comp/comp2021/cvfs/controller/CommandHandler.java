@@ -1,19 +1,29 @@
 package hk.edu.polyu.comp.comp2021.cvfs.controller;
 
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria.NewBinaryCriterionCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria.NewNegationCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria.NewSimpleCriterionCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria.PrintAllCriteriaCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.NewDiskCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.DeleteFileCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDirectoryCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDocumentCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.RenameFileCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.ChangeDirectoryCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.ListFilesCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.SearchFilesCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.exception.SystemTerminatedException;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
-import hk.edu.polyu.comp.comp2021.cvfs.model.Disk;
 
 public class CommandHandler {
     public static void handleInput(String input) throws SystemTerminatedException {
-        System systemInstance = System.getInstance();
         if (!input.isEmpty())
             parseInput(input);
         if (System.getWorkingDisk() == null) {
             promptCreateDisk();
             promptLoadDisk();
         }
-        java.lang.System.out.print(systemInstance.workingDirectoryAbsolutePath + "> ");
+        java.lang.System.out.print(System.getWorkingDirectoryPath() + "> ");
     }
     private static void promptCreateDisk() {
         java.lang.System.out.println("No disks are found currently, Input \"newDisk diskSize\" to create a new virtual disk with a specified disk size.");
@@ -30,7 +40,7 @@ public class CommandHandler {
             switch (command) {
                 case "newDisk": {
                     int newDiskSize = Integer.parseInt(inputList[1]);
-                    System.newDisk(newDiskSize);
+                    System.run(new NewDiskCommand(newDiskSize));
                     return;
                 }
                 case "newDoc": {
@@ -40,36 +50,36 @@ public class CommandHandler {
                     if (inputList.length >= 4) {
                         docContent = inputList[3];
                     }
-                    System.newDocument(docName, docType, docContent);
+                    System.run(new NewDocumentCommand(docName, docType, docContent));
                     return;
                 }
                 case "newDir": {
                     String dirName = inputList[1];
-                    System.newDirectory(dirName);
+                    System.run(new NewDirectoryCommand(dirName));
                     return;
                 }
                 case "delete": {
                     String fileName = inputList[1];
-                    System.deleteFile(fileName);
+                    System.run(new DeleteFileCommand(fileName));
                     return;
                 }
                 case "rename": {
                     String fileName = inputList[1];
                     String newFileName = inputList[2];
-                    System.renameFile(fileName, newFileName);
+                    System.run(new RenameFileCommand(fileName, newFileName));
                     return;
                 }
                 case "changeDir": {
                     String dirName = inputList[1];
-                    System.changeDirectory(dirName);
+                    System.run(new ChangeDirectoryCommand(dirName));
                     return;
                 }
                 case "list": {
-                    System.listFiles();
+                    System.run(new ListFilesCommand());
                     return;
                 }
                 case "rList": {
-                    System.rListFiles();
+                    System.run(new ListFilesCommand(true));
                     return;
                 }
                 case "newSimpleCri": {
@@ -77,13 +87,13 @@ public class CommandHandler {
                     String attrName = inputList[2];
                     String op = inputList[3];
                     String val = inputList[4];
-                    System.newSimpleCri(criName, attrName, op, val);
+                    System.run(new NewSimpleCriterionCommand(criName, attrName, op, val));
                     return;
                 }
                 case "newNegation": {
                     String criName1 = inputList[1];
                     String criName2 = inputList[2];
-                    System.newNegation(criName1, criName2);
+                    System.run(new NewNegationCommand(criName1, criName2));
                     return;
                 }
                 case "newBinaryCri": {
@@ -91,21 +101,33 @@ public class CommandHandler {
                     String criName3 = inputList[2];
                     String logicOp = inputList[3];
                     String criName4 = inputList[4];
-                    System.newBinaryCri(criName1, criName3, logicOp, criName4);
+                    System.run(new NewBinaryCriterionCommand(criName1, criName3, logicOp, criName4));
                     return;
                 }
                 case "printAllCriteria": {
-                    System.printAllCriteria();
+                    System.run(new PrintAllCriteriaCommand());
                     return;
                 }
                 case "search": {
                     String criName = inputList[1];
-                    System.search(criName);
+                    System.run(new SearchFilesCommand(criName));
                     return;
                 }
                 case "rSearch": {
                     String criName = inputList[1];
-                    System.rSearch(criName);
+                    System.run(new SearchFilesCommand(true, criName));
+                    return;
+                }
+                case "save": {
+                    String path = inputList[1];
+                    System.save(path);
+                }
+                case "undo": {
+                    System.undo();
+                    return;
+                }
+                case "redo": {
+                    System.redo();
                     return;
                 }
                 case "quit": {

@@ -1,5 +1,10 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model.files;
 
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class Directory extends StorableFile {
     // add a stack for undo/redo action
     public static final int DEFAULT_SIZE = 40;
@@ -39,7 +44,16 @@ public class Directory extends StorableFile {
     }
 
     @Override
-    public String toString() {
-
+    public void save(String path) {
+        if (!path.endsWith("/")) path += "/";
+        path += getName();
+        try {
+            Files.createDirectories(Paths.get(path));
+        } catch (IOException e) {
+            throw new RuntimeException("Directory creation failed");
+        }
+        for (File file : files) {
+            file.save(path);
+        }
     }
 }

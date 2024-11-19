@@ -1,8 +1,10 @@
 import hk.edu.polyu.comp.comp2021.cvfs.exception.SystemTerminatedException;
+import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.view.CLI;
 
 public class Application {
     public static void main(String[] args) {
+        System.getInstance();
         try {
             CLI.renderCLI("");
             while (true) {

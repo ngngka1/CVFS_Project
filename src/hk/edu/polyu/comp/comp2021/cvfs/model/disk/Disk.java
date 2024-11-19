@@ -1,4 +1,4 @@
-package hk.edu.polyu.comp.comp2021.cvfs.model;
+package hk.edu.polyu.comp.comp2021.cvfs.model.disk;
 
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
 
@@ -24,7 +24,7 @@ public class Disk {
 
     public void handleSizeChange(int sizeChange) {
         if (currentSize + sizeChange >= maxSize) {
-            throw new IllegalArgumentException("hk.edu.polyu.comp.comp2021.cvfs.model.Disk size exceeded!");
+            throw new IllegalArgumentException("hk.edu.polyu.comp.comp2021.cvfs.model.disk.Disk size exceeded!");
         } else {
             currentSize += sizeChange;
         }

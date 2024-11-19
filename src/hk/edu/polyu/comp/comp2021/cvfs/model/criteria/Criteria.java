@@ -11,6 +11,9 @@ public class Criteria {
     public static void add(Criterion x) {
         criteria.put(x.getName(), x);
     }
+    public static void pop(Criterion x) {
+        criteria.remove(x.getName());
+    }
     public static Criterion get(String criName) {return criteria.get(criName);}
 
     public static Criterion[] getAll() {

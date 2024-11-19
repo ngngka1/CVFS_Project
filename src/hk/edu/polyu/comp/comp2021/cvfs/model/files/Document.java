@@ -2,6 +2,9 @@ package hk.edu.polyu.comp.comp2021.cvfs.model.files;
 
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -36,6 +39,18 @@ public class Document extends File {
 
     public String toDisplayString() {
         return getName() + "  " + getType() + "  " + size();
+    }
+
+    public void save(String path) {
+//        new JavaIOFile(path, );
+        String filename = getName() + "." + getType();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(content); // Write content to the file
+        } catch (IOException e) {
+            throw new RuntimeException("Document creation failed");
+        }
+
     }
 
 }
