@@ -2,13 +2,13 @@ package hk.edu.polyu.comp.comp2021.cvfs.modelTest;
 
 import hk.edu.polyu.comp.comp2021.cvfs.model.Disk;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DiskTest {
-    private Disk disk;
 
     @BeforeEach
     void setUp() {
@@ -18,51 +18,51 @@ class DiskTest {
 
     @Test
     void testInitialRootDirectory() {
-        assertNotNull(disk.getRootDirectory());
-        assertEquals("", disk.getRootDirectory().getName());
+        assertNotNull(System.getWorkingDisk().getRootDirectory());
+        assertEquals("", System.getWorkingDisk().getRootDirectory().getName());
     }
 
     @Test
     void testHandleSizeChange() {
-        disk.handleSizeChange(100);
-        assertEquals(100, disk.currentSize);
+        System.getWorkingDisk().handleSizeChange(100);
+        assertEquals(100, System.getWorkingDisk().currentSize);
 
-        disk.handleSizeChange(-50);
-        assertEquals(50, disk.currentSize);
+        System.getWorkingDisk().handleSizeChange(-50);
+        assertEquals(50, System.getWorkingDisk().currentSize);
     }
 
     @Test
     void testHandleSizeChangeExceedsMaxSize() {
         assertThrows(IllegalArgumentException.class, () -> {
-            disk.handleSizeChange(1001);
+            System.getWorkingDisk().handleSizeChange(1001);
         });
     }
 
     @Test
     void testAddUniqueFileName() {
-        disk.addUniqueFileName("file1");
-        assertTrue(disk.hasFileName("file1"));
+        System.getWorkingDisk().addUniqueFileName("file1");
+        assertTrue(System.getWorkingDisk().hasFileName("file1"));
     }
 
     @Test
     void testDeleteUniqueFileName() {
-        disk.addUniqueFileName("file2");
-        disk.deleteUniqueFileName("file2");
-        assertFalse(disk.hasFileName("file2"));
+        System.getWorkingDisk().addUniqueFileName("file2");
+        System.getWorkingDisk().deleteUniqueFileName("file2");
+        assertFalse(System.getWorkingDisk().hasFileName("file2"));
     }
 
     @Test
     void testRenameUniqueFileName() {
-        disk.addUniqueFileName("file3");
-        disk.renameUniqueFileName("file3", "file4");
-        assertFalse(disk.hasFileName("file3"));
-        assertTrue(disk.hasFileName("file4"));
+        System.getWorkingDisk().addUniqueFileName("file3");
+        System.getWorkingDisk().renameUniqueFileName("file3", "file4");
+        assertFalse(System.getWorkingDisk().hasFileName("file3"));
+        assertTrue(System.getWorkingDisk().hasFileName("file4"));
     }
 
     @Test
     void testHasFileName() {
-        disk.addUniqueFileName("file5");
-        assertTrue(disk.hasFileName("file5"));
-        assertFalse(disk.hasFileName("noThisFile"));
+        System.getWorkingDisk().addUniqueFileName("file5");
+        assertTrue(System.getWorkingDisk().hasFileName("file5"));
+        assertFalse(System.getWorkingDisk().hasFileName("noThisFile"));
     }
 }
