@@ -37,9 +37,4 @@ public class Directory extends StorableFile {
     public String toDisplayString() {
         return getName() + "        " + size();
     }
-
-    @Override
-    public String toString() {
-
-    }
 }

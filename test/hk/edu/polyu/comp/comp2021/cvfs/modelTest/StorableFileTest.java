@@ -1,6 +1,5 @@
 package hk.edu.polyu.comp.comp2021.cvfs.modelTest;
 
-import hk.edu.polyu.comp.comp2021.cvfs.model.Disk;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
