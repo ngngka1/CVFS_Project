@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
-      <module fileurl="file://$PROJECT_DIR$/OOP_project.iml" filepath="$PROJECT_DIR$/OOP_project.iml" />
-=======
       <module fileurl="file://$PROJECT_DIR$/CVFS_Project.iml" filepath="$PROJECT_DIR$/CVFS_Project.iml" />
->>>>>>> 79531b9 (initial commit)
     </modules>
   </component>
 </project>
