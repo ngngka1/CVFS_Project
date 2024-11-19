@@ -5,3 +5,5 @@ public class SystemTerminatedException extends Exception {
         super(message);
     }
 }
+
+// test
