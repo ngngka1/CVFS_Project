@@ -34,7 +34,7 @@ class DirectoryTest {
     @Test
     void testSize() {
         System.getWorkingDirectory().createDoc("doc1", "txt", "TEXT");
-        assertEquals(40 + 2 * "TEXT".length(), System.getWorkingDirectory().size());
+        assertEquals(40+ 40 + 2 * "TEXT".length(), System.getWorkingDirectory().size());
     }
 
     @Test

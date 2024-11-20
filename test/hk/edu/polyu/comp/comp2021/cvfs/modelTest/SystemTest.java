@@ -6,6 +6,7 @@ import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDirectoryCom
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDocumentCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.RenameFileCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.ChangeDirectoryCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.ListFilesCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.exception.SystemTerminatedException;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
@@ -66,6 +67,7 @@ class SystemTest {
 
     @Test
     void UndoRedoTest() {
+        System.run(new ListFilesCommand());
         System.run(new NewDirectoryCommand("dir1"));
         System.run(new NewDirectoryCommand("dir12"));
         System.run(new NewDirectoryCommand("dir13"));
