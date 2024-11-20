@@ -63,4 +63,44 @@ class SystemTest {
         assertEquals("dir1", System.getWorkingDirectory().getName());
     }
 
+    @Test
+    void systemTest() {
+        System.run(new NewDirectoryCommand("dir1"));
+        System.run(new NewDirectoryCommand("dir12"));
+        System.run(new NewDirectoryCommand("dir13"));
+        System.run(new NewDirectoryCommand("dir14"));
+        System.run(new ChangeDirectoryCommand("dir1"));
+
+        System.run(new NewDirectoryCommand("dir2"));
+        System.run(new NewDirectoryCommand("dir22"));
+        System.run(new NewDirectoryCommand("dir23"));
+        System.run(new NewDirectoryCommand("dir24"));
+        System.run(new NewDirectoryCommand("dir25"));
+        System.run(new ChangeDirectoryCommand("dir2"));
+
+        System.run(new NewDirectoryCommand("dir3"));
+        System.run(new NewDirectoryCommand("dir32"));
+        System.run(new NewDirectoryCommand("dir33"));
+        System.run(new NewDirectoryCommand("dir34"));
+        System.run(new NewDirectoryCommand("dir35"));
+        System.run(new NewDirectoryCommand("dir36"));
+        System.run(new ChangeDirectoryCommand("dir3"));
+
+        System.run(new NewDirectoryCommand("dir4"));
+        System.run(new NewDirectoryCommand("dir42"));
+        System.run(new NewDirectoryCommand("dir43"));
+        System.run(new NewDirectoryCommand("dir44"));
+        System.run(new NewDirectoryCommand("dir45"));
+        System.run(new NewDirectoryCommand("dir46"));
+        System.run(new NewDirectoryCommand("dir47"));
+        System.run(new ChangeDirectoryCommand("dir4"));
+
+        System.undo();
+        System.undo();
+        System.undo();
+        assertThrows(IllegalArgumentException.class, () -> System.run(new ChangeDirectoryCommand("dir46")));
+        System.redo();
+        assertDoesNotThrow(IllegalArgumentException.class, () -> System.run(new ChangeDirectoryCommand("dir46")));
+    }
+
 }
