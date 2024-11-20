@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 public class SimpleCriterion extends Criterion {
-    private static final HashSet<String> VALUE_OPERATORS = new HashSet<String>(Arrays.asList( ">", "<", ">=", "<=", "==", "!="));
+    public static final HashSet<String> VALUE_OPERATORS = new HashSet<String>(Arrays.asList( ">", "<", ">=", "<=", "==", "!="));
     private String name;
     private String attribute;
     private String operator;
@@ -49,17 +49,17 @@ public class SimpleCriterion extends Criterion {
             case "type": {
                 return file.getType().equals(this.value.substring(1, this.value.length() - 1));
             }
-            case "size": {
+            default: {
                 switch (this.operator) {
                     case ">": {return file.size() > Integer.valueOf(this.value);}
                     case "<": {return file.size() < Integer.valueOf(this.value);}
                     case ">=": {return file.size() >= Integer.valueOf(this.value);}
                     case "<=": {return file.size() <= Integer.valueOf(this.value);}
                     case "==": {return file.size() == Integer.valueOf(this.value);}
-                    case "!=": {return file.size() != Integer.valueOf(this.value);}
+                    default: {return file.size() != Integer.valueOf(this.value);}
                 }
             }
-            default: return false;
+//            default: return false;
         }
     }
 
