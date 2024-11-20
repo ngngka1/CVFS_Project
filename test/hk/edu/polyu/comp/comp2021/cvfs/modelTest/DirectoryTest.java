@@ -13,7 +13,6 @@ class DirectoryTest {
     @BeforeEach
     void setUp() {
         System.getInstance();
-        System.getWorkingDirectory();
         System.run(new NewDiskCommand(1000));
     }
 
@@ -41,6 +40,6 @@ class DirectoryTest {
     @Test
     void testToDisplayString() {
         System.getWorkingDirectory().createDoc("doc1", "txt", "TEXT");
-        assertEquals("doc1        " + (40 + 2 * "TEXT".length()), System.getWorkingDirectory().getFiles().get(0).toDisplayString());
+        assertEquals("doc1 " + "txt " + (40 + 2 * "TEXT".length()), System.getWorkingDirectory().getFiles().get(0).toDisplayString());
     }
 }

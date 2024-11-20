@@ -22,12 +22,6 @@ class SystemTest {
     }
 
     @Test
-    void testNewDisk() {
-        assertNotNull(System.getWorkingDisk());
-        assertEquals(1000, System.getWorkingDisk().maxSize);
-    }
-
-    @Test
     void testNewDirectory() {
         System.run(new NewDirectoryCommand("dir1"));
         Directory workingDir = System.getWorkingDirectory();

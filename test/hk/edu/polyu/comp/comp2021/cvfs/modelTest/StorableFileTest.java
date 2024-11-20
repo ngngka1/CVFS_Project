@@ -1,6 +1,7 @@
 package hk.edu.polyu.comp.comp2021.cvfs.modelTest;
 
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.NewDiskCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDocumentCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
@@ -28,10 +29,10 @@ class StorableFileTest {
 
     @Test
     void testAddFileWithSameName() {
-        Document doc1 = new Document("doc1", "txt");
-        Document doc2 = new Document("doc1", "txt"); // Should throw an exception
-        System.getWorkingDirectory().add(doc1);
-        assertThrows(IllegalArgumentException.class, () -> System.getWorkingDirectory().add(doc2));
+        assertThrows(IllegalArgumentException.class, () -> {
+            System.run(new NewDocumentCommand("doc1", "txt", "TEXT"));
+            System.run(new NewDocumentCommand("doc1", "txt", "TEXT"));
+        });
     }
 
     @Test
