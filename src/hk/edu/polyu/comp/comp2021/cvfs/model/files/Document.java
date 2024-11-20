@@ -1,6 +1,7 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model.files;
 
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.File;
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.JavaIOFile;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -17,7 +18,7 @@ public class Document extends File {
 
     public Document(String name, String type) {
         super(name);
-        if (!ALLOWED_TYPE.contains(type)) {
+        if (!isSupportedType(type)) {
             throw new IllegalArgumentException("Unsupported document type!");
         }
         this.type = type;
@@ -41,11 +42,15 @@ public class Document extends File {
         return getName() + " " + getType() + " " + size();
     }
 
+    public static boolean isSupportedType(String type) {
+        return ALLOWED_TYPE.contains(type);
+    }
+
     public void save(String path) {
 //        new JavaIOFile(path, );
         String filename = getName() + "." + getType();
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path + "/" + filename))) {
             writer.write(content); // Write content to the file
         } catch (IOException e) {
             throw new RuntimeException("Document creation failed");

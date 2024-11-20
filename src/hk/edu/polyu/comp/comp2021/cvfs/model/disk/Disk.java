@@ -1,23 +1,49 @@
 package hk.edu.polyu.comp.comp2021.cvfs.model.disk;
 
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.File;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 
 public class Disk {
     private Directory rootDirectory;
     private final HashSet<String> fileNameManager = new HashSet<>();
     // add a stack for undo/redo action
-    public final int maxSize;
+    private static final int DEFAULT_MAX_SIZE = Integer.MAX_VALUE;
+    private int maxSize;
     public int currentSize;
+
+    public void save(String path) {
+        try {
+            Files.createDirectories(Paths.get(path));
+        } catch (IOException e) {
+            throw new RuntimeException("Disk folder creation failed");
+        }
+        for (File file : getRootDirectory().getFiles()) {
+            file.save(path);
+        }
+    }
 
     public Disk(int diskSize) {
         maxSize = diskSize;
     }
 
+    public Disk() {this(DEFAULT_MAX_SIZE);}
+
+//    public Disk(Directory defaultRootDirectory) {
+//        maxSize = (int)(defaultRootDirectory.size() * 1.5);
+//    }
+
+    public void setRootDirectory(Directory rootDirectory) {
+        this.rootDirectory = rootDirectory;
+    }
+
     public Directory getRootDirectory() {
         if (rootDirectory == null) {
-            rootDirectory = new Directory("");
+            setRootDirectory(new Directory(""));
         }
         return rootDirectory;
     }

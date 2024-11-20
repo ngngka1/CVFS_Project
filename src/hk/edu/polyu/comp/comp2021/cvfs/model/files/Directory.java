@@ -48,6 +48,7 @@ public class Directory extends StorableFile {
 
     @Override
     public void save(String path) {
+        if (path.contains("\\")) path = path.replace("\\", "/");
         if (!path.endsWith("/")) path += "/";
         path += getName();
         try {

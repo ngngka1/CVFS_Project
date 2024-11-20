@@ -4,7 +4,9 @@ import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria.NewBinaryCri
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria.NewNegationCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria.NewSimpleCriterionCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria.PrintAllCriteriaCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.LoadCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.NewDiskCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.SaveCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.DeleteFileCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDirectoryCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDocumentCommand;
@@ -120,7 +122,11 @@ public class CommandHandler {
                 }
                 case "save": {
                     String path = inputList[1];
-                    System.save(path);
+                    System.run(new SaveCommand(path));
+                }
+                case "load": {
+                    String path = inputList[1];
+                    System.run(new LoadCommand(path));
                 }
                 case "undo": {
                     System.undo();
@@ -139,7 +145,7 @@ public class CommandHandler {
                 }
             }
         } catch (IndexOutOfBoundsException e) {
-            java.lang.System.out.println("Inadequate arguments, please make sure necessary arguments are provided!");
+            java.lang.System.out.println("Inadequate arguments, please make sure necessary arguments are provided!" + e);
         } catch (IllegalArgumentException e) {
             java.lang.System.out.println(e.getMessage());
         }
