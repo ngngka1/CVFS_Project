@@ -10,10 +10,15 @@ import java.nio.file.Paths;
 
 public class Directory extends StorableFile {
     // add a stack for undo/redo action
-    public static final int DEFAULT_SIZE = 40;
+    private static final int DEFAULT_SIZE = 40;
 
     public Directory(String name) {
         super(name);
+    }
+
+
+    public static int getDefaultSize() {
+        return DEFAULT_SIZE;
     }
 
     @Override
@@ -42,7 +47,7 @@ public class Directory extends StorableFile {
         add(newDocument);
     }
 
-    public String toDisplayString() {
+    public String toString() {
         return getName() + " " + size();
     }
 

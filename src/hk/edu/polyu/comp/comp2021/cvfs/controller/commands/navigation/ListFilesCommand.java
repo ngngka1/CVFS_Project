@@ -25,7 +25,7 @@ public class ListFilesCommand extends Command {
         int fileSize = 0;
         for (File file : currentDirectory.getFiles()) {
             int s = file.size();
-            java.lang.System.out.println(indentation + file.toDisplayString());
+            java.lang.System.out.println(indentation + file.toString());
             if ((file instanceof Directory) && isRecursive) {
                 int[] fileCountAndSize = listFilesHelper((Directory) file, indentation + "  ", isRecursive);
                 fileCount += fileCountAndSize[0];

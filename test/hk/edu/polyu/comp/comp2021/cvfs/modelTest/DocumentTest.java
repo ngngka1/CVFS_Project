@@ -25,13 +25,13 @@ class DocumentTest {
     @Test
     void testSize() {
         Document doc = new Document("doc3", "java", "CODE");
-        assertEquals(Document.DEFAULT_SIZE + "Code".length() * 2, doc.size());
+        assertEquals(Document.getDefaultSize() + "Code".length() * 2, doc.size());
     }
 
     @Test
-    void testToDisplayString() {
+    void testToString() {
         Document doc = new Document("doc4", "html", "HTML");
-        assertEquals("doc4 html " + (Document.DEFAULT_SIZE + "HTML".length() * 2), doc.toDisplayString());
+        assertEquals("doc4 html " + (Document.getDefaultSize() + "HTML".length() * 2), doc.toString());
     }
 
     @Test

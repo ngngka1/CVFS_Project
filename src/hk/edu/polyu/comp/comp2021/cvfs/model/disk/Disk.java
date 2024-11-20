@@ -33,10 +33,6 @@ public class Disk {
 
     public Disk() {this(DEFAULT_MAX_SIZE);}
 
-//    public Disk(Directory defaultRootDirectory) {
-//        maxSize = (int)(defaultRootDirectory.size() * 1.5);
-//    }
-
     public void setRootDirectory(Directory rootDirectory) {
         this.rootDirectory = rootDirectory;
     }
@@ -50,7 +46,7 @@ public class Disk {
 
     public void handleSizeChange(int sizeChange) {
         if (currentSize + sizeChange >= maxSize) {
-            throw new IllegalArgumentException("hk.edu.polyu.comp.comp2021.cvfs.model.disk.Disk size exceeded!");
+            throw new IllegalArgumentException("Disk size exceeded!");
         } else {
             currentSize += sizeChange;
         }

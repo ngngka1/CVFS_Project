@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 public class Document extends File {
-    public static final int DEFAULT_SIZE = 40;
+    private static final int DEFAULT_SIZE = 40;
     private static final HashSet<String> ALLOWED_TYPE = new HashSet<>(Arrays.asList("txt", "java", "html", "css"));
     String type;
     String content;
@@ -23,6 +23,10 @@ public class Document extends File {
         }
         this.type = type;
         this.content = "";
+    }
+
+    public static int getDefaultSize() {
+        return DEFAULT_SIZE;
     }
 
     public String getType() {
@@ -38,7 +42,7 @@ public class Document extends File {
         return DEFAULT_SIZE + content.length() * 2;
     }
 
-    public String toDisplayString() {
+    public String toString() {
         return getName() + " " + getType() + " " + size();
     }
 
@@ -49,8 +53,9 @@ public class Document extends File {
     public void save(String path) {
 //        new JavaIOFile(path, );
         String filename = getName() + "." + getType();
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path + "/" + filename))) {
+        if (path.contains("\\")) path = path.replace("\\", "/");
+        if (!path.endsWith("/")) path += "/";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path + filename))) {
             writer.write(content); // Write content to the file
         } catch (IOException e) {
             throw new RuntimeException("Document creation failed");

@@ -12,6 +12,8 @@ public abstract class File {
     abstract public int size();
     abstract public String getType();
 
+    public static int getDefaultSize() {return 0;};
+
     protected File(String name) {
         if (name == null) {
             throw new IllegalArgumentException("File name cannot be empty!");
@@ -30,5 +32,5 @@ public abstract class File {
 
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}
-    abstract public String toDisplayString();
+    abstract public String toString();
 }

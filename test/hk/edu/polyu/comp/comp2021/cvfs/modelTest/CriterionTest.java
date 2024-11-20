@@ -6,7 +6,9 @@ import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria.NewSimpleCri
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.criteria.PrintAllCriteriaCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.NewDiskCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDirectoryCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDocumentCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.ChangeDirectoryCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.ListFilesCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.SearchFilesCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.criteria.*;
@@ -38,59 +40,21 @@ class CriterionTest {
     public void restoreStreams() {
         java.lang.System.setOut(originalOut);
         java.lang.System.setErr(originalErr);
-        java.lang.System.out.println(outContent);
+//        java.lang.System.out.println(outContent);
     }
-//
-//    @Test
-//    void testIsDocumentCriterion() {
-//        Criterion isDocument = IsDocumentCriterion.instance;
-//        assertTrue(isDocument.check(doc1));
-//        assertTrue(isDocument.check(doc2));
-//        assertFalse(isDocument.check(null)); // Assuming null is not a valid file
-//    }
-//
-//    @Test
-//    void testSimpleCriterionName() {
-//        SimpleCriterion nameCriterion = new SimpleCriterion("nm", "name", "contains", "\"report\"");
-//        assertTrue(nameCriterion.check(doc1));
-//        assertFalse(nameCriterion.check(doc2));
-//    }
-//
-//    @Test
-//    void testSimpleCriterionType() {
-//        SimpleCriterion typeCriterion = new SimpleCriterion("ty", "type", "equals", "\"txt\"");
-//        assertTrue(typeCriterion.check(doc1));
-//        assertTrue(typeCriterion.check(doc2));
-//    }
-//
-//    @Test
-//    void testSimpleCriterionSize() {
-//        SimpleCriterion sizeCriterion = new SimpleCriterion("sz", "size", ">", "20"); // Assuming size of content is more than 20
-//        assertTrue(sizeCriterion.check(doc1));
-//        assertTrue(sizeCriterion.check(doc2));
-//    }
-//
-//    @Test
-//    void testBinaryCriterion() {
-//        Criterion nameCriterion = new SimpleCriterion("nm", "name", "contains", "\"report\"");
-//        Criterion typeCriterion = new SimpleCriterion("ty", "type", "equals", "\"txt\"");
 
-//        BinaryCriterion binaryCriterion = new BinaryCriterion("binaryTest", nameCriterion, "&&", typeCriterion);
-//        assertTrue(binaryCriterion.check(doc1));
-//        assertFalse(binaryCriterion.check(doc2)); // doc2 does not contain "report"
-//
-//        BinaryCriterion binaryCriterionOr = new BinaryCriterion("binaryOrTest", nameCriterion, "||", typeCriterion);
-//        assertTrue(binaryCriterionOr.check(doc1));
-//        assertTrue(binaryCriterionOr.check(doc2)); // doc2 is of type txt
-//    }
+    @Test
+    void testPrintAll() {
+        System.run(new NewSimpleCriterionCommand("cr", "name", "contains", "\"3\""));
+        System.run(new NewNegationCommand("nn", "cr"));
+        System.run(new NewBinaryCriterionCommand("bb", "cr", "||", "nn"));
+        System.run(new PrintAllCriteriaCommand());
 
-//    @Test
-//    void testNegatedCriterion() {
-//        Criterion nameCriterion = new SimpleCriterion("nm", "name", "contains", "\"report\"");
-//        NegatedCriterion negatedCriterion = new NegatedCriterion("negatedName", nameCriterion);
-//        assertFalse(negatedCriterion.check(doc1));
-//        assertTrue(negatedCriterion.check(doc2));
-//    }
+        assertEquals("nn: !(name contains \"3\")\r\n" +
+                "bb: (name contains \"3\") || (!(name contains \"3\"))\r\n" +
+                "IsDocument: IsDocument()\r\n" +
+                "cr: name contains \"3\"\r\n", outContent.toString());
+    }
 
     @Test
     void testInvalidBinaryCriterion() {
@@ -124,28 +88,9 @@ class CriterionTest {
         Criteria.pop(Criteria.get("sz"));
         assertNull(Criteria.get("sz"));
     }
-    @Test
-    void test02() {
-        System.run(new NewDirectoryCommand("dir1"));
-        System.run(new ChangeDirectoryCommand("dir1"));
-        System.run(new ChangeDirectoryCommand(".."));
-        assertEquals("1", "1");
-    }
 
     @Test
     void test01() {
-        System.run(new NewDirectoryCommand("dir1"));
-        System.run(new NewDirectoryCommand("dir12"));
-        System.run(new NewDirectoryCommand("dir13"));
-        System.run(new NewDirectoryCommand("dir14"));
-        System.run(new ChangeDirectoryCommand("dir1"));
-
-        System.run(new NewDirectoryCommand("dir2"));
-        System.run(new NewDirectoryCommand("dir22"));
-        System.run(new NewDirectoryCommand("dir23"));
-        System.run(new NewDirectoryCommand("dir24"));
-        System.run(new NewDirectoryCommand("dir25"));
-        System.run(new ChangeDirectoryCommand("dir2"));
 
         System.run(new NewDirectoryCommand("dir3"));
         System.run(new NewDirectoryCommand("dir32"));
@@ -165,20 +110,20 @@ class CriterionTest {
         System.run(new ChangeDirectoryCommand("dir4"));
         System.run(new ChangeDirectoryCommand(".."));
         System.run(new ChangeDirectoryCommand(".."));
-        System.run(new ChangeDirectoryCommand(".."));
-        System.run(new ChangeDirectoryCommand(".."));
         System.run(new NewSimpleCriterionCommand("cr", "name", "contains", "\"3\""));
         System.run(new NewNegationCommand("nn", "cr"));
         System.run(new NewBinaryCriterionCommand("bb", "cr", "||", "nn"));
-        System.run(new SearchFilesCommand(true, "bb"));
+        System.run(new SearchFilesCommand(true, "nn"));
 //        System.run(new PrintAllCriteriaCommand());
-        assertEquals("dir1 760\r\n" +
-                "dir12 40\r\n" +
-                "dir13 40\r\n" +
-                "dir14 40\r\n" +
-                "number of matched files: 4\r\n" +
-                "total size of matched files: 0\r\n", outContent.toString());
-
+        assertEquals("dir3 320\r\n" +
+                "  dir4 40 (matched)\r\n" +
+                "  dir42 40 (matched)\r\n" +
+                "  dir44 40 (matched)\r\n" +
+                "  dir45 40 (matched)\r\n" +
+                "  dir46 40 (matched)\r\n" +
+                "  dir47 40 (matched)\r\n" +
+                "number of matched files: 6\r\n" +
+                "total size of matched files: 240\r\n", outContent.toString());
     }
 
     @Test
@@ -218,14 +163,24 @@ class CriterionTest {
         System.run(new ChangeDirectoryCommand(".."));
         System.run(new NewSimpleCriterionCommand("cr", "name", "contains", "\"3\""));
         System.run(new NewNegationCommand("nn", "cr"));
-        System.run(new NewBinaryCriterionCommand("bb", "cr", "||", "nn"));
-        System.run(new SearchFilesCommand(false, "nn"));
+        System.run(new SearchFilesCommand(true, "nn"));
 //        System.run(new PrintAllCriteriaCommand());
-        assertEquals("dir1 760\r\n" +
-                "dir12 40\r\n" +
-                "dir14 40\r\n" +
-                "number of matched files: 3\r\n" +
-                "total size of matched files: 0\r\n", outContent.toString());
+        assertEquals("dir1 760 (matched)\r\n" +
+                "  dir2 560 (matched)\r\n" +
+                "    dir3 320\r\n" +
+                "      dir4 40 (matched)\r\n" +
+                "      dir42 40 (matched)\r\n" +
+                "      dir44 40 (matched)\r\n" +
+                "      dir45 40 (matched)\r\n" +
+                "      dir46 40 (matched)\r\n" +
+                "      dir47 40 (matched)\r\n" +
+                "  dir22 40 (matched)\r\n" +
+                "  dir24 40 (matched)\r\n" +
+                "  dir25 40 (matched)\r\n" +
+                "dir12 40 (matched)\r\n" +
+                "dir14 40 (matched)\r\n" +
+                "number of matched files: 13\r\n" +
+                "total size of matched files: 840\r\n", outContent.toString());
     }
     @Test
     void test04() {
@@ -243,13 +198,10 @@ class CriterionTest {
         System.run(new ChangeDirectoryCommand(".."));
 
         System.run(new NewSimpleCriterionCommand("cr", "size", ">", "41"));
-//        System.run(new NewNegationCommand("nn", "cr"));
-//        System.run(new NewBinaryCriterionCommand("bb", "cr", "||", "nn"));
         System.run(new SearchFilesCommand(false, "cr"));
-//        System.run(new PrintAllCriteriaCommand());
-        assertEquals("dir1 240\r\n" +
+        assertEquals("dir1 240 (matched)\r\n" +
                 "number of matched files: 1\r\n" +
-                "total size of matched files: 0\r\n", outContent.toString());
+                "total size of matched files: 240\r\n", outContent.toString());
     }
 
     @Test
@@ -269,51 +221,24 @@ class CriterionTest {
 
         System.run(new NewSimpleCriterionCommand("cr", "size", ">", "41"));
         System.run(new NewNegationCommand("nn", "cr"));
-//        System.run(new NewBinaryCriterionCommand("bb", "cr", "||", "nn"));
-        System.run(new SearchFilesCommand(false, "nn"));
-//        System.run(new PrintAllCriteriaCommand());
-        assertEquals("dir12 40\r\n" +
-                "dir13 40\r\n" +
-                "dir14 40\r\n" +
-                "number of matched files: 3\r\n" +
-                "total size of matched files: 0\r\n", outContent.toString());
-    }
-
-    @Test
-    void test06() {
-        System.run(new NewDirectoryCommand("dir1"));
-        System.run(new NewDirectoryCommand("dir12"));
-        System.run(new NewDirectoryCommand("dir13"));
-        System.run(new NewDirectoryCommand("dir14"));
-        System.run(new ChangeDirectoryCommand("dir1"));
-
-        System.run(new NewDirectoryCommand("dir2"));
-        System.run(new NewDirectoryCommand("dir22"));
-        System.run(new NewDirectoryCommand("dir23"));
-        System.run(new NewDirectoryCommand("dir24"));
-        System.run(new NewDirectoryCommand("dir25"));
-        System.run(new ChangeDirectoryCommand(".."));
-
-        System.run(new NewSimpleCriterionCommand("cr", "size", ">", "41"));
-        System.run(new NewNegationCommand("nn", "cr"));
         System.run(new NewBinaryCriterionCommand("bb", "cr", "||", "nn"));
         System.run(new SearchFilesCommand(false, "bb"));
 //        System.run(new PrintAllCriteriaCommand());
-        assertEquals("dir1 240\r\n" +"dir12 40\r\n" +
-                "dir13 40\r\n" +
-                "dir14 40\r\n" +
+        assertEquals("dir1 240 (matched)\r\n" +
+                "dir12 40 (matched)\r\n" +
+                "dir13 40 (matched)\r\n" +
+                "dir14 40 (matched)\r\n" +
                 "number of matched files: 4\r\n" +
-                "total size of matched files: 0\r\n", outContent.toString());
+                "total size of matched files: 360\r\n", outContent.toString());
     }
 
     @Test
-    void test07() {
+    void test051() {
         System.run(new NewDirectoryCommand("dir1"));
         System.run(new NewDirectoryCommand("dir12"));
         System.run(new NewDirectoryCommand("dir13"));
         System.run(new NewDirectoryCommand("dir14"));
         System.run(new ChangeDirectoryCommand("dir1"));
-
         System.run(new NewDirectoryCommand("dir2"));
         System.run(new NewDirectoryCommand("dir22"));
         System.run(new NewDirectoryCommand("dir23"));
@@ -330,76 +255,80 @@ class CriterionTest {
                 "number of matched files: 0\r\n" +
                 "total size of matched files: 0\r\n", outContent.toString());
     }
+
     @Test
     void test10() {
         assertThrows(IllegalArgumentException.class, () -> System.run(new NewSimpleCriterionCommand("cr", "asd", "as", "41")));
     }
 
-
     @Test
-    void test08() {
+    void testIsDocument() {
         System.run(new NewDirectoryCommand("dir1"));
         System.run(new NewDirectoryCommand("dir12"));
         System.run(new NewDirectoryCommand("dir13"));
-        System.run(new NewDirectoryCommand("dir14"));
+        System.run(new NewDocumentCommand("doc1", "txt", "asf as s w"));
+        System.run(new SearchFilesCommand(true, "IsDocument"));
+        assertEquals("doc1 txt 60\r\n" +
+                "number of matched files: 1\r\n" +
+                "total size of matched files: 60\r\n", outContent.toString());
+    }
+    @Test
+    void testUndo() {
+        System.run(new NewSimpleCriterionCommand("cr", "size", ">", "80"));
+        System.undo();
+        assertThrows(IllegalArgumentException.class, () -> System.run(new SearchFilesCommand(true, "cr")));
+    }
+    @Test
+    void test08() {
+        String[] outputArr = new String[] {
+                "dir12 80 (matched)\r\n" +
+                "number of matched files: 1\r\n" +
+                "total size of matched files: 80\r\n",
+                "dir1 120\r\n" +
+                "  dir2 40 (matched)\r\n" +
+                "  dir22 40 (matched)\r\n" +
+                "dir12 80 (matched)\r\n" +
+                "  dir122 40 (matched)\r\n" +
+                "number of matched files: 4\r\n" +
+                "total size of matched files: 160\r\n",
+                "dir1 120\r\n" +
+                "  dir2 40 (matched)\r\n" +
+                "  dir22 40 (matched)\r\n" +
+                "dir12 80\r\n" +
+                "  dir122 40 (matched)\r\n" +
+                "number of matched files: 3\r\n" +
+                "total size of matched files: 120\r\n",
+                "dir1 120 (matched)\r\n" +
+                "  dir2 40 (matched)\r\n" +
+                "  dir22 40 (matched)\r\n" +
+                "dir12 80\r\n" +
+                "  dir122 40 (matched)\r\n" +
+                "number of matched files: 4\r\n" +
+                "total size of matched files: 160\r\n",
+                "dir1 120 (matched)\r\n" +
+                "number of matched files: 1\r\n" +
+                "total size of matched files: 120\r\n",
+                "dir1 120 (matched)\r\n" +
+                "dir12 80 (matched)\r\n" +
+                "number of matched files: 2\r\n" +
+                "total size of matched files: 200\r\n",
+        };
+        System.run(new NewDirectoryCommand("dir1"));
+        System.run(new NewDirectoryCommand("dir12"));
         System.run(new ChangeDirectoryCommand("dir1"));
 
         System.run(new NewDirectoryCommand("dir2"));
         System.run(new NewDirectoryCommand("dir22"));
-        System.run(new NewDirectoryCommand("dir23"));
-        System.run(new NewDirectoryCommand("dir24"));
-        System.run(new NewDirectoryCommand("dir25"));
         System.run(new ChangeDirectoryCommand(".."));
-//        String[] outputArr = new String[] {
-//        "number of matched files: 0\r\ntotal size of matched files: 0\r\n",
-//        "dir1 240\r\ndir2 40\r\ndir22 40\r\ndir23 40\r\ndir24 40\r\ndir25 40\r\ndir12 40\r\ndir13 40\r\ndir14 40\r\nnumber of matched files: 8\r\ntotal size of matched files: 0\r\n",
-//        "
-//        dir1 240
-//        dir2 40
-//        dir22 40
-//        dir23 40
-//        dir24 40
-//        dir25 40
-//        dir12 40
-//        dir13 40
-//        dir14 40
-//        number of matched files: 8
-//        total size of matched files: 0
-//        ",
-//        "
-//        dir1 240
-//        dir12 40
-//        dir13 40
-//        dir14 40
-//        number of matched files: 4
-//        total size of matched files: 0
-//        ",
-//        "
-//        dir1 240
-//        number of matched files: 1
-//        total size of matched files: 0
-//        ",
-//        "
-//        dir1 240
-//        number of matched files: 1
-//        total size of matched files: 0
-//        "
-//        };
+        System.run(new ChangeDirectoryCommand("dir12"));
+        System.run(new NewDirectoryCommand("dir122"));
+        System.run(new ChangeDirectoryCommand(".."));
+        int i = 0;
         for (String x : SimpleCriterion.VALUE_OPERATORS) {
-
-            System.run(new NewSimpleCriterionCommand("cr", "size", x, "41"));
-//            System.run(new NewNegationCommand("nn", "cr"));
-//            System.run(new NewBinaryCriterionCommand("bb", "cr", "&&", "nn"));
-            java.lang.System.out.print("\"");
+            System.run(new NewSimpleCriterionCommand("cr", "size", x, "80"));
             System.run(new SearchFilesCommand(true, "cr"));
-            java.lang.System.out.print("\",");
-            //        System.run(new PrintAllCriteriaCommand());
-//            assertEquals(
-//                    "number of matched files: 0\r\n" +
-//                            "total size of matched files: 0\r\n", outContent.toString());
-//            }
-
-            assertEquals(outContent.toString(), outContent.toString());
+            assertEquals(outputArr[i++], outContent.toString());
+            outContent.reset();
         }
     }
 }

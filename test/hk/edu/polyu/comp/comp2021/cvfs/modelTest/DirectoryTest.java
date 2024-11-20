@@ -1,6 +1,7 @@
 package hk.edu.polyu.comp.comp2021.cvfs.modelTest;
 
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.NewDiskCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.ChangeDirectoryCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,9 +39,9 @@ class DirectoryTest {
     }
 
     @Test
-    void testToDisplayString() {
+    void testToString() {
         System.getWorkingDirectory().createDoc("doc1", "txt", "TEXT");
-        assertEquals("doc1 " + "txt " + (40 + 2 * "TEXT".length()), System.getWorkingDirectory().getFiles().get(0).toDisplayString());
+        assertEquals("doc1 " + "txt " + (40 + 2 * "TEXT".length()), System.getWorkingDirectory().getFiles().get(0).toString());
     }
 
     @Test
@@ -49,7 +50,7 @@ class DirectoryTest {
     }
 
     @Test
-    void testSave(){
-
+    void testChangeDirectory(){
+        assertThrows(IllegalArgumentException.class, () -> System.run(new ChangeDirectoryCommand("")));
     }
 }

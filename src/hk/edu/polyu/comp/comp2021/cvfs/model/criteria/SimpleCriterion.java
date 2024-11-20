@@ -15,17 +15,16 @@ public class SimpleCriterion extends Criterion {
 
     public SimpleCriterion(String criName, String attrName, String op, String val) {
         if (criName.length() != 2 && !criName.matches("[a-zA-Z]{2}")) throw new IllegalArgumentException("criteria name can only be 2-letter long!");
-        if (!attrName.equals("name") && !attrName.equals("type") && !attrName.equals("size")) throw new IllegalArgumentException("Invalid attribute name");
 
         switch (attrName) {
             case "name" : {
                 if (!op.equals("contains")) throw new IllegalArgumentException("invalid op!");
-                if (!val.matches("^[\"]{1}.*[\"]{1}$")) throw new IllegalArgumentException("Invalid value! (Should be string enquoted with double quote)");
+                if (!val.matches("^[\"]{1}.*[\"]{1}$")) throw new IllegalArgumentException("Invalid value! (not a string enquoted with double quote)");
                 break;
             }
             case "type" : {
                 if (!op.equals("equals")) throw new IllegalArgumentException("invalid op!");
-                if (!val.matches("^[\"]{1}.*[\"]{1}$")) throw new IllegalArgumentException("Invalid value! (Should be string enquoted with double quote)");
+                if (!val.matches("^[\"]{1}.*[\"]{1}$")) throw new IllegalArgumentException("Invalid value! (not a string enquoted with double quote)");
                 break;
             }
             case "size" : {

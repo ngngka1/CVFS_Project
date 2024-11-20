@@ -31,32 +31,33 @@ public class SearchFilesCommand extends Command {
         int fileCount = 0;
         int fileSize = 0;
         for (File file : currentDirectory.getFiles()) {
-            int s = file.size();
 
             if (file instanceof Document) {
                 if (criterion == null || criterion.check(file)) {
-                    output.add(indentation + file.toDisplayString());
+                    output.add(indentation + file.toString());
                     fileCount++;
-                    fileSize += s;
+                    fileSize += file.size();
                 }
             } else {
-                int[] fileCountAndSize = new int[] {0, 0};
                 if (criterion == null || criterion.check(file)) {
-                    output.add(indentation + file.toDisplayString());
-//                    if (isRecursive) {
-//                        fileCountAndSize = searchFilesHelper(output, (Directory) file, indentation + "  ", isRecursive, null);
-//                    }
+                    output.add(indentation + file.toString() + " (matched)");
                     fileCount++;
-                    // note: fileSize will be added later outside if block
+                    if (isRecursive) {
+                        int[] fileCountAndSize = searchFilesHelper(output, (Directory) file, indentation + "  ", isRecursive, criterion);
+                        fileCount += fileCountAndSize[0];
+//                        fileSize += fileCountAndSize[1] + file.getDefaultSize();
+                    }
+                    fileSize += file.size();
                 } else if (isRecursive) {
-                    output.add(indentation + file.toDisplayString());
-                    fileCountAndSize = searchFilesHelper(output, (Directory) file, indentation + "  ", isRecursive, criterion);
+                    output.add(indentation + file.toString());
+                    int[] fileCountAndSize = searchFilesHelper(output, (Directory) file, indentation + "  ", isRecursive, criterion);
                     if (fileCountAndSize[0] == 0) {
                         output.remove(output.size() - 1);
+                    } else {
+                        fileCount += fileCountAndSize[0];
+                        fileSize += fileCountAndSize[1];
                     }
                 }
-                fileCount += fileCountAndSize[0];
-                fileSize += fileCountAndSize[1];
             }
         }
         return new int[] {fileCount, fileSize};

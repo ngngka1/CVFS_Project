@@ -17,6 +17,7 @@ public class NewDiskCommand extends StatefulCommand {
     public void run() {
         System.setWorkingDisk(target);
         System.setWorkingDirectory(target.getRootDirectory());
+        System.setWorkingDirectoryPath("");
     }
 
     @Override

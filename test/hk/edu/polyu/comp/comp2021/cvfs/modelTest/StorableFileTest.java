@@ -24,7 +24,7 @@ class StorableFileTest {
         Document doc = new Document("doc1", "txt");
         System.getWorkingDirectory().add(doc);
         assertTrue(System.getWorkingDirectory().getFiles().contains(doc));
-        assertEquals(doc.size(), System.getWorkingDirectory().size() - Directory.DEFAULT_SIZE);
+        assertEquals(doc.size(), System.getWorkingDirectory().size() - Directory.getDefaultSize());
     }
 
     @Test

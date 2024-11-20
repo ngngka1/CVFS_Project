@@ -48,11 +48,15 @@ public class CommandHandler {
                 case "newDoc": {
                     String docName = inputList[1];
                     String docType = inputList[2];
-                    String docContent = "";
+                    StringBuilder docContent = new StringBuilder();
                     if (inputList.length >= 4) {
-                        docContent = inputList[3];
+                        int i = 3;
+                        do {
+                            docContent.append(inputList[i++]);
+                            if (i < inputList.length) docContent.append(" ");
+                        } while (i < inputList.length);
                     }
-                    System.run(new NewDocumentCommand(docName, docType, docContent));
+                    System.run(new NewDocumentCommand(docName, docType, docContent.toString()));
                     return;
                 }
                 case "newDir": {
@@ -88,8 +92,12 @@ public class CommandHandler {
                     String criName = inputList[1];
                     String attrName = inputList[2];
                     String op = inputList[3];
-                    String val = inputList[4];
-                    System.run(new NewSimpleCriterionCommand(criName, attrName, op, val));
+                    StringBuilder val = new StringBuilder();
+                    int i = 4;
+                    do {
+                        val.append(inputList[i++]);
+                    } while (i < inputList.length);
+                    System.run(new NewSimpleCriterionCommand(criName, attrName, op, val.toString()));
                     return;
                 }
                 case "newNegation": {
@@ -123,10 +131,12 @@ public class CommandHandler {
                 case "save": {
                     String path = inputList[1];
                     System.run(new SaveCommand(path));
+                    return;
                 }
                 case "load": {
                     String path = inputList[1];
                     System.run(new LoadCommand(path));
+                    return;
                 }
                 case "undo": {
                     System.undo();

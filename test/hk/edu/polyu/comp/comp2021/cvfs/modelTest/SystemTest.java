@@ -1,5 +1,6 @@
 package hk.edu.polyu.comp.comp2021.cvfs.modelTest;
 
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.LoadCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.NewDiskCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.DeleteFileCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDirectoryCommand;
@@ -11,7 +12,12 @@ import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.exception.SystemTerminatedException;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
+import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.JavaIOFile;
 import org.junit.jupiter.api.*;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +26,7 @@ class SystemTest {
     @BeforeEach
     void setUp() {
         System.getInstance();
-        System.run(new NewDiskCommand(1000));
+        System.run(new NewDiskCommand(10000000));
     }
 
     @Test
@@ -104,6 +110,70 @@ class SystemTest {
         assertThrows(IllegalArgumentException.class, () -> System.run(new ChangeDirectoryCommand("dir46")));
         System.redo();
         assertDoesNotThrow(() -> System.run(new ChangeDirectoryCommand("dir46")));
+    }
+
+    @Test
+    void loadDiskTest() throws IOException {
+        JavaIOFile curDir = new JavaIOFile("");
+        JavaIOFile diskDir = new JavaIOFile(curDir.getAbsolutePath() + "/testDisk");
+        JavaIOFile subDir123 = new JavaIOFile(diskDir.getAbsolutePath() + "/123");
+        JavaIOFile subDirTest = new JavaIOFile(diskDir.getAbsolutePath() + "/test");
+        JavaIOFile subDirTestDoc = new JavaIOFile(subDirTest.getAbsolutePath() + "/ab.txt");
+//        java.lang.System.out.println(subDirTestDoc.isFile());
+
+        if (!(diskDir.mkdir() && subDir123.mkdir() && subDirTest.mkdir())) {
+            throw new IllegalArgumentException("asdasd");
+        }
+        try (FileWriter writer = new FileWriter(subDirTestDoc.getAbsolutePath())) {
+            writer.write("asda\n" +
+                    "whatasdf");
+        } catch (IOException e ) {java.lang.System.out.println("cant write");}
+
+        String currentAbsolutePath = curDir.getAbsolutePath();
+        System.run(new LoadCommand(currentAbsolutePath + "\\" + "testDisk"));
+        assertDoesNotThrow(() -> System.run(new ChangeDirectoryCommand("test")));
+        assertTrue(subDirTestDoc.exists());
+        assertTrue(subDirTest.exists());
+        assertTrue(subDir123.exists());
+        assertTrue(diskDir.exists());
+        assertEquals("ab", System.getWorkingDirectory().getFiles().get(0).getName());
+
+        Files.deleteIfExists(subDirTestDoc.toPath());
+        Files.deleteIfExists(subDirTest.toPath());
+        Files.deleteIfExists(subDir123.toPath());
+        Files.deleteIfExists(diskDir.toPath());
+    }
+
+    @Test
+    void loadDiskTest2() throws IOException {
+        JavaIOFile curDir = new JavaIOFile("");
+        JavaIOFile diskDir = new JavaIOFile(curDir.getAbsolutePath() + "/testDisk");
+        JavaIOFile subDir123 = new JavaIOFile(diskDir.getAbsolutePath() + "/123");
+        JavaIOFile subDirTest = new JavaIOFile(diskDir.getAbsolutePath() + "/test");
+        JavaIOFile subDirTestDoc = new JavaIOFile(subDirTest.getAbsolutePath() + "/ab.cpp");
+//        java.lang.System.out.println(subDirTestDoc.isFile());
+
+        if (!(diskDir.mkdir() && subDir123.mkdir() && subDirTest.mkdir())) {
+            throw new IllegalArgumentException("asdasd");
+        }
+        try (FileWriter writer = new FileWriter(subDirTestDoc.getAbsolutePath())) {
+            writer.write("asda\n" +
+                    "whatasdf");
+        } catch (IOException e ) {java.lang.System.out.println("cant write");}
+
+        String currentAbsolutePath = curDir.getAbsolutePath();
+        System.run(new LoadCommand(currentAbsolutePath + "\\" + "testDisk"));
+        assertDoesNotThrow(() -> System.run(new ChangeDirectoryCommand("test")));
+        assertTrue(subDirTestDoc.exists());
+        assertTrue(subDirTest.exists());
+        assertTrue(subDir123.exists());
+        assertTrue(diskDir.exists());
+//        assertEquals("ab", System.getWorkingDirectory().getFiles().get(0).getName());
+
+        Files.deleteIfExists(subDirTestDoc.toPath());
+        Files.deleteIfExists(subDirTest.toPath());
+        Files.deleteIfExists(subDir123.toPath());
+        Files.deleteIfExists(diskDir.toPath());
     }
 
     @Test
