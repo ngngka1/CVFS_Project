@@ -7,6 +7,7 @@ import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDocumentComm
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.RenameFileCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.ChangeDirectoryCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
+import hk.edu.polyu.comp.comp2021.cvfs.model.exception.SystemTerminatedException;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
 import org.junit.jupiter.api.*;
@@ -34,7 +35,7 @@ class SystemTest {
         System.run(new NewDirectoryCommand("dir1"));
         System.run(new NewDocumentCommand("doc1", "txt", "TEXT"));
         Document doc;
-        doc = (Document) System.getWorkingDirectory().getFiles().get(0);
+        doc = (Document) System.getWorkingDirectory().getFiles().get(1);
         assertEquals("doc1", doc.getName());
         assertEquals("txt", doc.getType());
     }
@@ -64,7 +65,7 @@ class SystemTest {
     }
 
     @Test
-    void systemTest() {
+    void UndoRedoTest() {
         System.run(new NewDirectoryCommand("dir1"));
         System.run(new NewDirectoryCommand("dir12"));
         System.run(new NewDirectoryCommand("dir13"));
@@ -100,7 +101,12 @@ class SystemTest {
         System.undo();
         assertThrows(IllegalArgumentException.class, () -> System.run(new ChangeDirectoryCommand("dir46")));
         System.redo();
-        assertDoesNotThrow(IllegalArgumentException.class, () -> System.run(new ChangeDirectoryCommand("dir46")));
+        assertDoesNotThrow(() -> System.run(new ChangeDirectoryCommand("dir46")));
+    }
+
+    @Test
+    void TerminateTest(){
+        assertThrows(SystemTerminatedException.class, System::terminate);
     }
 
 }

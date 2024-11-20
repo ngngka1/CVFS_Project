@@ -90,52 +90,52 @@ public class System {
     }
 
     public static void load(String path) {
-        JavaIOFile directory = new JavaIOFile(path);
-        if (!directory.exists() || !directory.isDirectory()) throw new IllegalArgumentException("target virtual disk not found!");
-        JavaIOFile[] files = directory.listFiles();
-        setWorkingDisk(new Disk());
-        Directory rootDirectory = getWorkingDisk().getRootDirectory();
-        recursiveLoadHelper(rootDirectory, files, path);
-        setWorkingDirectory(rootDirectory);
-
+//        JavaIOFile directory = new JavaIOFile(path);
+//        if (!directory.exists() || !directory.isDirectory()) throw new IllegalArgumentException("target virtual disk not found!");
+//        JavaIOFile[] files = directory.listFiles();
+//        setWorkingDisk(new Disk());
+//        Directory rootDirectory = getWorkingDisk().getRootDirectory();
+//        recursiveLoadHelper(rootDirectory, files, path);
+//        setWorkingDirectory(rootDirectory);
+//
     }
-
-    private static void recursiveLoadHelper(Directory directory, JavaIOFile[] files, String path) {
-        if (files == null) return; //
-        for (JavaIOFile file : files) {
-            if(!file.exists()){
-                java.lang.System.out.println("no permission to read file: " + file.getName());
-                continue;
-            }
-            File current;
-            String fileBaseName = file.getName();
-            String fileName = fileBaseName;
-            if (file.isFile()) {
-                fileName = fileBaseName.substring(0, fileBaseName.lastIndexOf("."));
-                String fileType = fileBaseName.substring(fileName.length() + 1);
-                try (BufferedReader reader = new BufferedReader(new FileReader(path + file))) {
-                    StringBuilder content = new StringBuilder();
-                    String line;
-                    // Read the file line by line
-                    while ((line = reader.readLine()) != null) {
-                        content.append(line);
-                    }
-                    if (!Document.isSupportedType(fileType)) {
-                        java.lang.System.out.println("Note: " + fileBaseName + " is of unsupported file type, disk load operation will skip this file.");
-                    }
-                    current = new Document(fileName, fileType, content.toString());
-                } catch (IOException e) {
-                    throw new IllegalArgumentException("error while reading document: " + e.toString());
-                }
-            } else if (file.isDirectory()) {
-                current = new Directory(fileName);
-                recursiveLoadHelper((Directory) current, file.listFiles(), path + fileBaseName + "/");
-            } else {
-                throw new IllegalArgumentException("no permission to read file " + fileBaseName);
-            }
-            directory.add(current);
-        }
-    }
+//
+//    private static void recursiveLoadHelper(Directory directory, JavaIOFile[] files, String path) {
+//        if (files == null) return; //
+//        for (JavaIOFile file : files) {
+//            if(!file.exists()){
+//                java.lang.System.out.println("no permission to read file: " + file.getName());
+//                continue;
+//            }
+//            File current;
+//            String fileBaseName = file.getName();
+//            String fileName = fileBaseName;
+//            if (file.isFile()) {
+//                fileName = fileBaseName.substring(0, fileBaseName.lastIndexOf("."));
+//                String fileType = fileBaseName.substring(fileName.length() + 1);
+//                try (BufferedReader reader = new BufferedReader(new FileReader(path + file))) {
+//                    StringBuilder content = new StringBuilder();
+//                    String line;
+//                    // Read the file line by line
+//                    while ((line = reader.readLine()) != null) {
+//                        content.append(line);
+//                    }
+//                    if (!Document.isSupportedType(fileType)) {
+//                        java.lang.System.out.println("Note: " + fileBaseName + " is of unsupported file type, disk load operation will skip this file.");
+//                    }
+//                    current = new Document(fileName, fileType, content.toString());
+//                } catch (IOException e) {
+//                    throw new IllegalArgumentException("error while reading document: " + e.toString());
+//                }
+//            } else if (file.isDirectory()) {
+//                current = new Directory(fileName);
+//                recursiveLoadHelper((Directory) current, file.listFiles(), path + fileBaseName + "/");
+//            } else {
+//                throw new IllegalArgumentException("no permission to read file " + fileBaseName);
+//            }
+//            directory.add(current);
+//        }
+//    }
 
     public static void terminate() throws SystemTerminatedException {
         throw new SystemTerminatedException("System Terminated.");
