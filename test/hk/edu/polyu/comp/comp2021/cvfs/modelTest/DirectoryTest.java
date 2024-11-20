@@ -1,8 +1,6 @@
 package hk.edu.polyu.comp.comp2021.cvfs.modelTest;
 
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.NewDiskCommand;
-import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDirectoryCommand;
-import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDocumentCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +39,7 @@ class DirectoryTest {
 
     @Test
     void testToDisplayString() {
-        System.run(new NewDocumentCommand("doc1", "txt", "TEXT"));
+        System.getWorkingDirectory().createDoc("doc1", "txt", "TEXT");
         assertEquals("doc1 " + "txt " + (40 + 2 * "TEXT".length()), System.getWorkingDirectory().getFiles().get(0).toDisplayString());
     }
 
