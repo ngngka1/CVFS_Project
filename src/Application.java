@@ -1,4 +1,4 @@
-import hk.edu.polyu.comp.comp2021.cvfs.exception.SystemTerminatedException;
+import hk.edu.polyu.comp.comp2021.cvfs.model.exception.SystemTerminatedException;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.view.CLI;
 

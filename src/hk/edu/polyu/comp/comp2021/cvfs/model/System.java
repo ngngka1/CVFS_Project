@@ -2,7 +2,7 @@ package hk.edu.polyu.comp.comp2021.cvfs.model;
 
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.base.Command;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.base.StatefulCommand;
-import hk.edu.polyu.comp.comp2021.cvfs.exception.SystemTerminatedException;
+import hk.edu.polyu.comp.comp2021.cvfs.model.exception.SystemTerminatedException;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
 import hk.edu.polyu.comp.comp2021.cvfs.model.disk.Disk;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
@@ -10,10 +10,8 @@ import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.File;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.base.JavaIOFile;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.rmi.UnexpectedException;
 import java.util.Stack;
 
 public class System {

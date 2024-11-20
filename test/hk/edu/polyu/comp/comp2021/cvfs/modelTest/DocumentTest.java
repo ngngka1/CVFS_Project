@@ -1,5 +1,6 @@
 package hk.edu.polyu.comp.comp2021.cvfs.modelTest;
 
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.NewDiskCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Directory;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
@@ -13,7 +14,7 @@ class DocumentTest {
     @BeforeEach
     void setUp(){
         System.getInstance();
-        System.newDisk(1000);
+        System.run(new NewDiskCommand(1000));
         System.getWorkingDirectory();
     }
 
@@ -31,6 +32,12 @@ class DocumentTest {
     @Test
     void testToDisplayString() {
         Document doc = new Document("doc4", "html", "HTML");
-        assertEquals("doc4  html  " + (Document.DEFAULT_SIZE + "HTML".length() * 2), doc.toDisplayString());
+        assertEquals("doc4 html " + (Document.DEFAULT_SIZE + "HTML".length() * 2), doc.toDisplayString());
+    }
+
+    @Test
+    void testSaveDocumentWithIOException() {
+        Document doc = new Document("doc5", "txt", "TEXT");
+        assertThrows(RuntimeException.class, () -> doc.save("/invalid/path/testDoc.txt"));
     }
 }

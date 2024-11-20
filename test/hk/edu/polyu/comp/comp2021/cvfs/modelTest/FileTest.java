@@ -1,8 +1,10 @@
 package hk.edu.polyu.comp.comp2021.cvfs.modelTest;
 
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.NewDiskCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDirectoryCommand;
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.NewDocumentCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +15,7 @@ class FileTest {
     @BeforeEach
     void setUp(){
         System.getInstance();
-        System.newDisk(1000);
+        System.run(new NewDiskCommand(1000));
         System.getWorkingDirectory();
     }
 
@@ -25,13 +27,13 @@ class FileTest {
 
     @Test
     void testFileCreationWithExistingName() {
-        System.newDirectory("dir1");
-        System.newDocument("file1", "txt", "TEXT");
-        assertThrows(IllegalArgumentException.class, () -> System.newDocument("file1", "txt", "TEXT"));
+        System.run(new NewDirectoryCommand("dir1"));
+        System.run(new NewDocumentCommand("file1", "txt", "TEXT"));
+        assertThrows(IllegalArgumentException.class, () -> System.run(new NewDocumentCommand("file1", "txt", "TEXT")));
     }
 
     @Test
     void testFileCreationWithInvalidCharacters() {
-        assertThrows(IllegalArgumentException.class, () -> System.newDocument("invalid$name", "txt", "TEXT"));
+        assertThrows(IllegalArgumentException.class, () -> System.run(new NewDocumentCommand("invalid$name", "txt", "TEXT")));
     }
 }

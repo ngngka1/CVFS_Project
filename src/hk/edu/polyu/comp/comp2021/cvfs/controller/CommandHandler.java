@@ -14,7 +14,7 @@ import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.files.RenameFileComma
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.ChangeDirectoryCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.ListFilesCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.navigation.SearchFilesCommand;
-import hk.edu.polyu.comp.comp2021.cvfs.exception.SystemTerminatedException;
+import hk.edu.polyu.comp.comp2021.cvfs.model.exception.SystemTerminatedException;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 
 public class CommandHandler {

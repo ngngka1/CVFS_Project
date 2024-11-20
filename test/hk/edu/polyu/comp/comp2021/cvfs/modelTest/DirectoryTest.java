@@ -1,5 +1,6 @@
 package hk.edu.polyu.comp.comp2021.cvfs.modelTest;
 
+import hk.edu.polyu.comp.comp2021.cvfs.controller.commands.disk.NewDiskCommand;
 import hk.edu.polyu.comp.comp2021.cvfs.model.System;
 import hk.edu.polyu.comp.comp2021.cvfs.model.files.Document;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,7 @@ class DirectoryTest {
     void setUp() {
         System.getInstance();
         System.getWorkingDirectory();
-        System.newDisk(1000);
+        System.run(new NewDiskCommand(1000));
     }
 
     @Test

@@ -2,7 +2,7 @@ package hk.edu.polyu.comp.comp2021.cvfs.view;
 
 import java.util.Scanner;
 import hk.edu.polyu.comp.comp2021.cvfs.controller.CommandHandler;
-import hk.edu.polyu.comp.comp2021.cvfs.exception.SystemTerminatedException;
+import hk.edu.polyu.comp.comp2021.cvfs.model.exception.SystemTerminatedException;
 
 public class CLI {
     private static final Scanner scannerObj = new Scanner(java.lang.System.in);
