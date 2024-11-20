@@ -47,4 +47,9 @@ class DirectoryTest {
     void testGetType(){
         assertEquals("directory", System.getWorkingDirectory().getType());
     }
+
+    @Test
+    void testSave(){
+
+    }
 }
